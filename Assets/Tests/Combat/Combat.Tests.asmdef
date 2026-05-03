@@ -1,0 +1,24 @@
+{
+    "name": "Combat.Tests",
+    "rootNamespace": "GameDesign4.Tests.Combat",
+    "references": [
+        "Combat.Contracts",
+        "Combat.Main",
+        "Unit.Contracts",
+        "Unit.Main"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

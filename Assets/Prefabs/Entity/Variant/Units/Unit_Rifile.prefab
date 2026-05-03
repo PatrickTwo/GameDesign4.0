@@ -84,7 +84,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Unit_Rifile
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4319161754187993218, guid: 60fc7568ae38bb44fb3452afd53d1edc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2128222438021261387, guid: 60fc7568ae38bb44fb3452afd53d1edc,

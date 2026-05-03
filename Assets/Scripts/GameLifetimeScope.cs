@@ -1,5 +1,7 @@
 using GameDesign4.Command.Contracts;
 using GameDesign4.Command.Runtime;
+using GameDesign4.Combat.Contracts.Service;
+using GameDesign4.Combat.Runtime;
 using GameDesign4.SceneInteract.Runtime;
 using GameDesign4.Infrastructure.Contracts.Events;
 using GameDesign4.UI.Runtime;
@@ -30,6 +32,11 @@ namespace GameDesign4.GameFlow
             builder.Register<CommandBus>(Lifetime.Singleton)
                 .AsSelf()
                 .As<ICommandBus>();
+
+            // 战斗规则服务：提供单位自动索敌、攻击范围判断与伤害结算。
+            builder.Register<CombatRuleService>(Lifetime.Singleton)
+                .AsSelf()
+                .As<IUnitCombatRuleService>();
 
 
             // 指针上下文服务：负责射线查询，生成指针上下文。

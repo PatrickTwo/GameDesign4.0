@@ -1,13 +1,9 @@
 {
-    "name": "Unit.Main",
-    "rootNamespace": "GameDesign4.Unit",
+    "name": "Combat.Main",
+    "rootNamespace": "GameDesign4.Combat",
     "references": [
-        "Shared",
-        "Infrastructure.Contracts",
         "Combat.Contracts",
         "Unit.Contracts",
-        "Command.Contracts",
-        "VContainer",
         "Common"
     ],
     "includePlatforms": [],

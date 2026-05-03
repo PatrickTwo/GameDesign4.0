@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 4256962960561161972}
   - component: {fileID: 806594968214170972}
   - component: {fileID: 7088621277590148342}
-  - component: {fileID: 4319161754187993218}
+  - component: {fileID: 5983276527443311943}
   - component: {fileID: 8055417566032073147}
   m_Layer: 0
   m_Name: BaseUnit
@@ -424,7 +424,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4319161754187993218
+--- !u!114 &5983276527443311943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -433,14 +433,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7808836221218994912}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 253ae323ceede0d4d813817a69d44da0, type: 3}
+  m_Script: {fileID: 11500000, guid: 45a9e73fd19cb204db31c24bab87c30e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDefinition: {fileID: 0}
-  autoSearchRange: 8
-  chaseRange: 12
-  arriveThreshold: 0.2
   navMeshAgent: {fileID: 806594968214170972}
+  animator: {fileID: 7088621277590148342}
+  selectionIndicator: {fileID: 7599446718499506701}
 --- !u!114 &8055417566032073147
 MonoBehaviour:
   m_ObjectHideFlags: 0

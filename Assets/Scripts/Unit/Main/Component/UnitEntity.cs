@@ -1,9 +1,10 @@
 using System;
+using GameDesign4.Combat.Contracts.Service;
 using GameDesign4.Command.Contracts;
 using GameDesign4.Infrastructure.Utilities;
 using GameDesign4.Unit.Contracts.Command;
+using GameDesign4.Unit.Contracts.Identity;
 using GameDesign4.Unit.Contracts.Model;
-using GameDesign4.Unit.Contracts.Service;
 using GameDesign4.Unit.Presentation;
 using GameDesign4.Unit.Registry;
 using GameDesign4.Unit.Runtime;
@@ -19,7 +20,7 @@ namespace GameDesign4.Unit.Component
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
-    public sealed class UnitEntity : MonoBehaviour
+    public sealed class UnitEntity : MonoBehaviour, IUnitIdentity
     {
         // 组件引用
         [SerializeField] private NavMeshAgent navMeshAgent;
