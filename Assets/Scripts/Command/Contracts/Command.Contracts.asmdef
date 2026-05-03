@@ -1,0 +1,17 @@
+{
+    "name": "Command.Contracts",
+    "rootNamespace": "GameDesign4.Command.Contracts",
+    "references": [
+        "Shared",
+        "Infrastructure.Contracts"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

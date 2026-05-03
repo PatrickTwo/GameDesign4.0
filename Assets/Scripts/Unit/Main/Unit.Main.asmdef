@@ -1,0 +1,19 @@
+{
+    "name": "Unit.Main",
+    "rootNamespace": "GameDesign4.Unit",
+    "references": [
+        "Shared",
+        "Unit.Contracts",
+        "Command.Contracts",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

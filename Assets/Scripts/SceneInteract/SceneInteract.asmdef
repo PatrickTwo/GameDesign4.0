@@ -1,0 +1,21 @@
+{
+    "name": "SceneInteract",
+    "rootNamespace": "GameDesign4.SceneInteract",
+    "references": [
+        "Shared",
+        "Command.Contracts",
+        "Unit.Contracts",
+        "Unity.InputSystem",
+        "VContainer",
+        "Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

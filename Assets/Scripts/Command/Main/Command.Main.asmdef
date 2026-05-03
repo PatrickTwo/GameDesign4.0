@@ -1,0 +1,19 @@
+{
+    "name": "Command.Main",
+    "rootNamespace": "GameDesign4.Command",
+    "references": [
+        "Shared",
+        "Command.Contracts",
+        "Infrastructure.Contracts",
+        "Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
