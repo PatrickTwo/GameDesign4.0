@@ -12,8 +12,6 @@ SceneInteract
 │  └─ Selection
 │     └─ SceneSelectable.cs
 └─ Runtime
-   ├─ PointerContext.cs
-   ├─ PointerContextService.cs
    ├─ SceneCommandService.cs
    ├─ SceneInteractController.cs
    └─ SceneSelectionService.cs
@@ -25,11 +23,9 @@ SceneInteract
 |---|---|
 | `Presentation/Input/Generated/GameInput.cs` | Input System 自动生成的场景交互输入定义。 |
 | `Presentation/Selection/SceneSelectable.cs` | 挂在可选中场景对象上的薄组件，负责暴露单位标识并桥接选中表现。 |
-| `Runtime/PointerContext.cs` | 一次场景交互输入对应的屏幕位置与命中结果数据。 |
-| `Runtime/PointerContextService.cs` | 使用默认场景相机、UI 事件系统和 Layer 配置执行射线检测。 |
 | `Runtime/SceneSelectionService.cs` | 维护当前单选目标并切换选中状态。 |
 | `Runtime/SceneCommandService.cs` | 将左键、右键、取消输入翻译为选择、移动和攻击命令。 |
-| `Runtime/SceneInteractController.cs` | 由 DI 容器创建并驱动的纯运行时控制器，负责串起整条场景交互链路。 |
+| `Runtime/SceneInteractController.cs` | 由 DI 容器创建并驱动的纯运行时控制器，负责串起输入、共享指针上下文与场景命令链路。 |
 
 ## 当前交互链路
 
@@ -41,6 +37,13 @@ GameInput
 -> SceneSelectionService / ICommandBus
 -> Unit
 ```
+
+## 共享依赖
+
+| 文件 | 职责 |
+|---|---|
+| `Common/Utilities/Input/PointerContext.cs` | 一次共享指针检测结果数据。 |
+| `Common/Utilities/Input/PointerContextService.cs` | 统一的共享指针射线检测服务与调试输出。 |
 
 ## 当前阶段能力
 

@@ -18,22 +18,22 @@ MonoBehaviour:
   m_GUID: 8c4376403db69f345abd743fadb306e2
   m_SerializeEntries:
   - m_GUID: 297691fcdd6fb144b86f9b8aeddc40da
-    m_Address: UI.Panel.Hud
+    m_Address: UI.Panel.Hud.Main
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8c86e10aebd10c74c91c2421c69a17e4
-    m_Address: UI.Panel.Build
+    m_Address: UI.Panel.Build.Main
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b7b97f2fb266ce4409d11f5131f7e7f9
-    m_Address: UI.Panel.Inventory
+    m_Address: UI.Panel.Inventory.Main
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c095e56f0c85e5049b45d5ab6aeec8f0
-    m_Address: UI.Panel.Production
+    m_Address: UI.Panel.Production.Main
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

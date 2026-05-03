@@ -4,7 +4,7 @@ namespace GameDesign4.UI.Runtime
     /// UI 面板控制服务接口。
     /// 负责向展示层暴露统一的面板打开、关闭和切换能力。
     /// </summary>
-    public interface IUiPanelService
+    public interface IUIService
     {
         /// <summary>
         /// 判断指定面板当前是否处于打开状态。

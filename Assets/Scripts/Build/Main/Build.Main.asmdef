@@ -1,0 +1,24 @@
+{
+    "name": "Build.Main",
+    "rootNamespace": "GameDesign4.Build",
+    "references": [
+        "Build.Contracts",
+        "Common",
+        "UI",
+        "UniTask",
+        "VContainer",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,4 +1,6 @@
+using GameDesign4.Build.Contracts;
 using GameDesign4.Command.Contracts;
+using GameDesign4.Infrastructure.Runtime.Pointer;
 using GameDesign4.Unit.Contracts.Command;
 using GameDesign4.Unit.Contracts.Model;
 
@@ -10,14 +12,16 @@ namespace GameDesign4.SceneInteract.Runtime
     /// </summary>
     public sealed class SceneCommandService
     {
+        private readonly IBuildPlacementService buildPlacementService;
         private readonly ICommandBus commandBus;
         private readonly SceneSelectionService selectionService;
 
         /// <summary>
         /// 构造场景命令服务。
         /// </summary>
-        public SceneCommandService(ICommandBus commandBus, SceneSelectionService selectionService)
+        public SceneCommandService(ICommandBus commandBus, IBuildPlacementService buildPlacementService, SceneSelectionService selectionService)
         {
+            this.buildPlacementService = buildPlacementService;
             this.commandBus = commandBus;
             this.selectionService = selectionService;
         }
@@ -26,16 +30,21 @@ namespace GameDesign4.SceneInteract.Runtime
         /// <summary>
         /// 处理左键点击。
         /// </summary>
-        public void HandlePrimaryClick(PointerContext pointerContext)
+        public void HandlePrimaryClick(PointerContext pointerContext, SceneSelectable hitSelectable)
         {
+            if (buildPlacementService.HandlePrimaryAction(pointerContext.GroundHitPoint, pointerContext.HasGroundHit, pointerContext.IsOverUI))
+            {
+                return;
+            }
+
             if (pointerContext.IsOverUI)
             {
                 return;
             }
 
-            if (pointerContext.HitSelectable != null)
+            if (hitSelectable != null)
             {
-                selectionService.Select(pointerContext.HitSelectable);
+                selectionService.Select(hitSelectable);
                 return;
             }
 
@@ -45,8 +54,13 @@ namespace GameDesign4.SceneInteract.Runtime
         /// <summary>
         /// 处理右键点击。
         /// </summary>
-        public void HandleSecondaryClick(PointerContext pointerContext)
+        public void HandleSecondaryClick(PointerContext pointerContext, SceneSelectable hitSelectable)
         {
+            if (buildPlacementService.HandleSecondaryAction())
+            {
+                return;
+            }
+
             if (pointerContext.IsOverUI || selectionService.HasSelection == false)
             {
                 return;
@@ -58,9 +72,9 @@ namespace GameDesign4.SceneInteract.Runtime
                 return;
             }
 
-            if (pointerContext.HitSelectable != null && pointerContext.HitSelectable != selectedUnit)
+            if (hitSelectable != null && hitSelectable != selectedUnit)
             {
-                if (pointerContext.HitSelectable.TryGetUnitId(out UnitId targetUnitId))
+                if (hitSelectable.TryGetUnitId(out UnitId targetUnitId))
                 {
                     commandBus.Publish(new UnitAttackCommand(sourceUnitId, targetUnitId));
                 }
@@ -79,6 +93,11 @@ namespace GameDesign4.SceneInteract.Runtime
         /// </summary>
         public void HandleCancel()
         {
+            if (buildPlacementService.HandleCancelAction())
+            {
+                return;
+            }
+
             selectionService.ClearSelection();
         }
         #endregion

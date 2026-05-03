@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec4481014be70b42be00c4f7e0889c9, type: 3}
+  m_Name: CAT_UI_Default
+  m_EditorClassIdentifier: 
+  panelEntries:
+  - panelId: HudPanel
+    addressKey: UI.Panel.Hud.Main
+    layer: 0
+    openOnStartup: 1
+    exclusivePanelIds: []
+  - panelId: BuildPanel
+    addressKey: UI.Panel.Build.Main
+    layer: 100
+    openOnStartup: 0
+    exclusivePanelIds: []
+  - panelId: InventoryPanel
+    addressKey: UI.Panel.Inventory.Main
+    layer: 100
+    openOnStartup: 0
+    exclusivePanelIds: []
+  - panelId: ProductionPanel
+    addressKey: UI.Panel.Production.Main
+    layer: 100
+    openOnStartup: 0
+    exclusivePanelIds: []

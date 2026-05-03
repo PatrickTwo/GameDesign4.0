@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GameDesign4.UI.Presentation
+namespace GameDesign4.Build.Presentation
 {
     /// <summary>
     /// 建造面板条目控制器。

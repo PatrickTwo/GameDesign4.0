@@ -14,12 +14,11 @@
 
 ### 外部模块依赖
 
-#### `Shared`
+#### `Build`
 
 | 模块接口 | 描述说明 |
 | --- | --- |
-| `IBuildPanelUseCase.GetPanelEntries` | 读取建造面板所需的只读条目视图数据 |
-| `IBuildPanelUseCase.StartPlacement` | 在点击建造条目后发起建造放置流程 |
+| 无 | 建造面板已归属 `Build` 模块，UI 模块不再直接承载建造业务入口 |
 
 #### `UI.Definitions`
 
@@ -36,6 +35,7 @@
 
 | 模块接口 | 描述说明 |
 | --- | --- |
+| `UIRoot.GetLayerRoot` | 按层级枚举返回已通过 Inspector 绑定的层级根节点 |
 | `BasePanel.PanelId` | 读取运行时面板唯一标识 |
 | `BasePanel.Open` | 打开面板实例 |
 | `BasePanel.Close` | 关闭面板实例 |
@@ -58,7 +58,6 @@
 
 | 模块接口 | 描述说明 |
 | --- | --- |
-| `Transform.Find` | 查找 UI 层级根节点 |
 | `Transform.SetAsLastSibling` | 调整面板显示顺序，保证后打开面板显示在前 |
 
 ## 2. 模块流程图
@@ -77,6 +76,6 @@ flowchart TD
 
 | 项 | 说明 |
 | --- | --- |
-| 当前风险 | 装配层对 UI 仍是硬依赖；层节点依赖场景命名；关闭能力未完成 |
-| 当前限制 | 当前版本仍通过 `Transform.Find` 查找层节点，且 `BuildPanelController` 运行时生成条目实例 |
-| 后续建议 | 先补 `NullUiPanelService` 与条件注册，再补 UI 模块测试，并把层级节点改为 Inspector 显式绑定 |
+| 当前风险 | 装配层对 UI 仍是硬依赖；UI 面板初始化仍是异步 fire-and-forget |
+| 当前限制 | 当前层级节点依赖场景中的 `UIRoot` 组件显式绑定 |
+| 后续建议 | 先补 `NullUiPanelService` 与条件注册，再补 UI 模块测试，并补一个初始化完成信号 |

@@ -26,18 +26,21 @@ namespace GameDesign4.CameraControl.Runtime
         /// <summary>
         /// 构造相机控制器。
         /// </summary>
-        public CameraController(CameraControlSceneContext sceneContext)
+        public CameraController(
+            Transform cameraTarget,
+            CinemachineVirtualCamera virtualCamera,
+            CameraControlSettings settings)
         {
             // 初始化输入读取器。
             inputReader = new CameraInputReader();
 
             // 保存场景引用与配置。
-            settings = sceneContext.Settings;
-            cameraTarget = sceneContext.CameraTarget;
-            virtualCamera = sceneContext.VirtualCamera;
+            this.settings = settings;
+            this.cameraTarget = cameraTarget;
+            this.virtualCamera = virtualCamera;
 
             // 读取虚拟相机上的 Transposer 组件。
-            transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+            transposer = this.virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
 
             // 根据初始 FollowOffset 计算相机方向和目标距离。
             Vector3 offset = transposer.m_FollowOffset;

@@ -19,15 +19,13 @@ namespace GameDesign4.UI.Runtime
     /// 1. 初始化并缓存所有 BasePanel
     /// 2. 提供统一的面板打开、关闭、切换接口
     /// </summary>
-    public sealed class UIService : IUiPanelService, IDisposable
+    public sealed class UIService : IUIService, IStartable, IDisposable
     {
-        private readonly Transform uiRoot;
+        private readonly UIRoot uiRoot;
         private readonly IObjectResolver objectResolver;
 
         // 缓存全部面板，键为 PanelId。
         private readonly Dictionary<string, BasePanel> openedPanels = new();
-        // 缓存 UI 层级根节点，避免重复查找。
-        private readonly Dictionary<UiLayerType, Transform> layerRoots = new();
         // 面板互斥关系，键为 PanelId，值为互斥的其他 PanelId 列表。
         private readonly Dictionary<string, List<string>> panelExclusive = new();
 
@@ -37,12 +35,16 @@ namespace GameDesign4.UI.Runtime
         /// </summary>
         private readonly List<string> openedPanelOrder = new();
 
+        public void Start()
+        {
+            GameLog.Log(GameLogModule.UI, "UI 服务启动");
+        }
         /// <summary>
         /// 构造运行时 UI 服务。
         /// </summary>
         public UIService(
             UiPanelCatalogDef uiPanelCatalog,
-            Transform uiRoot,
+            UIRoot uiRoot,
             IObjectResolver objectResolver)
         {
             Guard.EnsureNotNull(uiPanelCatalog, nameof(uiPanelCatalog));
@@ -61,7 +63,6 @@ namespace GameDesign4.UI.Runtime
         private async UniTask InitializePanelsAsync(UiPanelCatalogDef uiPanelCatalog)
         {
             openedPanels.Clear();
-            layerRoots.Clear();
             panelExclusive.Clear();
             openedPanelOrder.Clear();
 
@@ -69,7 +70,8 @@ namespace GameDesign4.UI.Runtime
             for (int index = 0; index < panelEntries.Count; index++)
             {
                 UiPanelEntryDef panelEntry = panelEntries[index];
-                Transform layerRoot = GetLayerRoot(panelEntry.Layer);
+                // 通过场景内绑定组件直接获取层级节点，避免字符串查找带来的脆弱性。
+                Transform layerRoot = uiRoot.GetLayerRoot(panelEntry.Layer);
 
                 // 资产数据已由编辑器校验
                 UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<GameObject> panelHandle =
@@ -105,7 +107,7 @@ namespace GameDesign4.UI.Runtime
         }
         #endregion
 
-        #region 面板与层级查询
+        #region 面板查询
         /// <summary>
         /// 尝试获取指定面板。
         /// </summary>
@@ -118,34 +120,6 @@ namespace GameDesign4.UI.Runtime
             }
 
             return openedPanels.TryGetValue(panelId, out panel);
-        }
-
-        /// <summary>
-        /// 获取指定 UI 层级对应的根节点。
-        /// </summary>
-        private Transform GetLayerRoot(UiLayerType layer)
-        {
-            if (layerRoots.TryGetValue(layer, out Transform layerRoot))
-            {
-                return layerRoot;
-            }
-
-            string layerRootName = layer switch
-            {
-                UiLayerType.Hud => "ID=HudLayer",
-                UiLayerType.Normal => "ID=NormalLayer",
-                UiLayerType.Popup => "ID=PopupLayer",
-                UiLayerType.Overlay => "ID=OverlayLayer",
-                _ => string.Empty
-            };
-            Guard.EnsureNotNullOrEmpty(layerRootName, $"UI 层级节点不存在：{layer}");
-
-            // XXX: 这里通过字符串查找层级节点，和项目中“UI尽量使用Inspector绑定、不要添加查找绑定逻辑”的规范冲突，节点改名后也容易在运行时才暴露问题。
-            Transform resolvedLayerRoot = uiRoot.Find(layerRootName);
-            Guard.EnsureNotNull(resolvedLayerRoot, $"未找到 UI 层级节点：{layerRootName}");
-
-            layerRoots[layer] = resolvedLayerRoot;
-            return resolvedLayerRoot;
         }
         #endregion
 
@@ -251,7 +225,6 @@ namespace GameDesign4.UI.Runtime
             }
 
             openedPanels.Clear();
-            layerRoots.Clear();
             panelExclusive.Clear();
             openedPanelOrder.Clear();
         }

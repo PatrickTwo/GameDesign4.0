@@ -1,15 +1,13 @@
 using System.Text;
 using GameDesign4.Infrastructure.Runtime.Debug;
-using GameDesign4.Unit.Contracts.Model;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
-namespace GameDesign4.SceneInteract.Runtime
+namespace GameDesign4.Infrastructure.Runtime.Pointer
 {
     /// <summary>
     /// 指针上下文服务。
-    /// 负责根据屏幕坐标执行场景与地面射线检测。
+    /// 负责根据屏幕坐标执行场景与地面射线检测，不承载具体业务语义。
     /// </summary>
     public sealed class PointerContextService
     {
@@ -29,7 +27,7 @@ namespace GameDesign4.SceneInteract.Runtime
 
         #region 指针上下文查询
         /// <summary>
-        /// 根据屏幕坐标构建一次指针上下文。
+        /// 根据屏幕坐标构建一次指针命中上下文。
         /// </summary>
         public PointerContext GetPointerContext(Vector2 screenPosition)
         {
@@ -44,25 +42,25 @@ namespace GameDesign4.SceneInteract.Runtime
 
             Ray pointerRay = sceneCamera.ScreenPointToRay(screenPosition);
 
-            SceneSelectable hitSelectable = null;
+            Transform hitTransform = null;
             Vector3 sceneHitPoint = Vector3.zero;
             if (Physics.Raycast(pointerRay, out RaycastHit sceneHit, maxRayDistance, sceneLayerMask))
             {
-                hitSelectable = sceneHit.transform.GetComponentInParent<SceneSelectable>();
+                hitTransform = sceneHit.transform;
                 sceneHitPoint = sceneHit.point;
             }
 
             bool hasGroundHit = Physics.Raycast(pointerRay, out RaycastHit groundHit, maxRayDistance, groundLayerMask);
             Vector3 groundHitPoint = hasGroundHit ? groundHit.point : Vector3.zero;
 
-            return new PointerContext(screenPosition, isOverUI, hitSelectable, sceneHitPoint, hasGroundHit, groundHitPoint);
+            return new PointerContext(screenPosition, isOverUI, hitTransform, sceneHitPoint, hasGroundHit, groundHitPoint);
         }
         #endregion
     }
 
     /// <summary>
     /// 指针上下文调试输出。
-    /// 负责实时读取当前指针状态，并将场景命中结果格式化到调试面板。
+    /// 负责实时读取当前指针状态，并将通用命中结果格式化到调试面板。
     /// </summary>
     public sealed class PointerContextDebugOutput : IDebugOutput
     {
@@ -87,41 +85,32 @@ namespace GameDesign4.SceneInteract.Runtime
         /// </summary>
         public string GetDebugText()
         {
-            Pointer pointerDevice = Pointer.current;
-            if (pointerDevice == null)
-            {
-                return "未检测到 Pointer 设备。";
-            }
-
-            // 每帧直接读取当前指针坐标，保证调试面板实时跟随鼠标状态。
-            Vector2 screenPosition = pointerDevice.position.ReadValue();
+            // 使用 Legacy Input 读取鼠标位置，避免为调试输出额外引入 InputSystem 依赖。
+            Vector2 screenPosition = Input.mousePosition;
             PointerContext pointerContext = pointerContextService.GetPointerContext(screenPosition);
 
             StringBuilder builder = new StringBuilder(256);
             builder.Append("屏幕坐标: ").Append(FormatVector2(pointerContext.ScreenPosition)).AppendLine();
             builder.Append("悬停UI: ").Append(pointerContext.IsOverUI ? "是" : "否").AppendLine();
-            builder.Append("命中对象: ").Append(GetHitObjectText(pointerContext.HitSelectable)).AppendLine();
-            builder.Append("场景命中点: ").Append(FormatOptionalPoint(pointerContext.HitSelectable != null, pointerContext.SceneHitPoint)).AppendLine();
+            builder.Append("命中对象: ").Append(GetHitObjectText(pointerContext.HitTransform)).AppendLine();
+            builder.Append("场景命中点: ").Append(FormatOptionalPoint(pointerContext.HitTransform != null, pointerContext.SceneHitPoint)).AppendLine();
             builder.Append("命中地面: ").Append(pointerContext.HasGroundHit ? "是" : "否").AppendLine();
             builder.Append("地面命中点: ").Append(FormatOptionalPoint(pointerContext.HasGroundHit, pointerContext.GroundHitPoint));
             return builder.ToString();
         }
         #endregion
 
-        #region 文本格式化
         /// <summary>
         /// 生成命中对象显示文本。
         /// </summary>
-        private static string GetHitObjectText(SceneSelectable hitSelectable)
+        private static string GetHitObjectText(Transform hitTransform)
         {
-            if (hitSelectable == null)
+            if (hitTransform == null)
             {
                 return "无";
             }
 
-            bool hasUnitId = hitSelectable.TryGetUnitId(out UnitId unitId);
-            string unitIdText = hasUnitId ? unitId.ToString() : "无";
-            return hitSelectable.name + " | UnitId: " + unitIdText;
+            return hitTransform.name;
         }
 
         /// <summary>
@@ -147,6 +136,5 @@ namespace GameDesign4.SceneInteract.Runtime
         {
             return hasPoint ? FormatVector3(value) : "无";
         }
-        #endregion
     }
 }

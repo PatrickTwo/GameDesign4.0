@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace GameDesign4.SceneInteract.Runtime
+namespace GameDesign4.Infrastructure.Runtime.Pointer
 {
     /// <summary>
     /// 指针上下文结构体。
-    /// 描述一次场景交互输入对应的屏幕位置与命中结果。
+    /// 描述一次指针检测对应的屏幕坐标、场景命中与地面命中结果。
     /// </summary>
     public readonly struct PointerContext
     {
@@ -14,14 +14,14 @@ namespace GameDesign4.SceneInteract.Runtime
         public PointerContext(
             Vector2 screenPosition,
             bool isOverUI,
-            SceneSelectable hitSelectable,
+            Transform hitTransform,
             Vector3 sceneHitPoint,
             bool hasGroundHit,
             Vector3 groundHitPoint)
         {
             ScreenPosition = screenPosition;
             IsOverUI = isOverUI;
-            HitSelectable = hitSelectable;
+            HitTransform = hitTransform;
             SceneHitPoint = sceneHitPoint;
             HasGroundHit = hasGroundHit;
             GroundHitPoint = groundHitPoint;
@@ -38,9 +38,9 @@ namespace GameDesign4.SceneInteract.Runtime
         public bool IsOverUI { get; }
 
         /// <summary>
-        /// 当前命中的可选择对象。
+        /// 当前命中的场景节点。
         /// </summary>
-        public SceneSelectable HitSelectable { get; }
+        public Transform HitTransform { get; }
 
         /// <summary>
         /// 当前命中的场景坐标。

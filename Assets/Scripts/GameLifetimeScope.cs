@@ -1,4 +1,7 @@
 using Cinemachine;
+using GameDesign4.Build.Contracts;
+using GameDesign4.Build.Definition;
+using GameDesign4.Build.Runtime;
 using GameDesign4.CameraControl.Contracts.Service;
 using GameDesign4.CameraControl.Definition;
 using GameDesign4.CameraControl.Runtime;
@@ -7,8 +10,12 @@ using GameDesign4.Command.Runtime;
 using GameDesign4.Combat.Contracts.Service;
 using GameDesign4.Combat.Runtime;
 using GameDesign4.Infrastructure.Runtime.Debug;
-using GameDesign4.SceneInteract.Runtime;
+using GameDesign4.Infrastructure.Runtime.Logging;
+using GameDesign4.Infrastructure.Runtime.Pointer;
 using GameDesign4.Infrastructure.Contracts.Events;
+using GameDesign4.SceneInteract.Runtime;
+using GameDesign4.UI.Definitions;
+using GameDesign4.UI.Presentation;
 using GameDesign4.UI.Runtime;
 using UnityEngine;
 using VContainer;
@@ -22,10 +29,15 @@ namespace GameDesign4.GameFlow
     /// </summary>
     public class GameLifetimeScope : LifetimeScope
     {
-        [SerializeField] private Transform uiRoot;
+        [Header("资源管理")]
+        [SerializeField] private UiPanelCatalogDef uiPanelCatalog;
+        [SerializeField] private BuildCatalogDef buildCatalog;
+        [Header("UI根节点")]
+        [SerializeField] private UIRoot uiRoot;
+        [Header("相机控制")]
         [SerializeField] private Transform cameraTarget;
         [SerializeField] private CinemachineVirtualCamera virtualCamera;
-        [SerializeField] private CameraControlSettings cameraControlSettings = new CameraControlSettings();
+        [SerializeField] private CameraControlSettings cameraControlSettings;
 
 
         protected override void Configure(IContainerBuilder builder)
@@ -50,8 +62,10 @@ namespace GameDesign4.GameFlow
             // 场景交互控制器：由容器驱动输入生命周期并派发场景交互命令。
             builder.RegisterEntryPoint<SceneInteractController>();
 
-            // 相机控制上下文：聚合相机目标、虚拟相机与控制参数。
-            builder.RegisterInstance(new CameraControlSceneContext(cameraTarget, virtualCamera, cameraControlSettings));
+            // 相机控制运行依赖：直接注册场景节点与配置，避免无意义的上下文包装。
+            builder.RegisterInstance(cameraTarget);
+            builder.RegisterInstance(virtualCamera);
+            builder.RegisterInstance(cameraControlSettings);
 
             // RTS 相机控制器：负责平移、缩放、旋转，并对外暴露启停能力。
             builder.RegisterEntryPoint<CameraController>()
@@ -64,11 +78,31 @@ namespace GameDesign4.GameFlow
 
 
             builder.RegisterInstance(uiRoot);
+            UiPanelCatalogDef resolvedUiPanelCatalog = uiPanelCatalog;
+            if (resolvedUiPanelCatalog == null)
+            {
+                // XXX: 当前场景若未绑定 UI 目录资产，UIService 将无法初始化，因此这里回退为空目录并输出中文警告，避免容器装配直接失败。
+                resolvedUiPanelCatalog = ScriptableObject.CreateInstance<UiPanelCatalogDef>();
+                GameLog.Warning(GameLogModule.UI, "未绑定 UiPanelCatalogDef，UI 面板目录将为空。");
+            }
+
+            builder.RegisterInstance(resolvedUiPanelCatalog);
+
+            // 建造运行时上下文：承载当前场景使用的建造目录资产。
+            if (buildCatalog == null)
+            {
+                GameLog.Warning(GameLogModule.Build, "未绑定 BuildCatalogDef，建造面板将为空。");
+            }
+
+            builder.RegisterInstance(buildCatalog);
+
+            // 建造放置服务：负责建造模式、预览、放置、取消与每帧预览跟随。
+            builder.RegisterEntryPoint<BuildPlacementService>()
+                .AsSelf()
+                .As<IBuildPlacementService>();
 
             // UI 服务：根据目录配置加载并缓存全部面板。
-            builder.Register<UIService>(Lifetime.Singleton)
-                .AsSelf()
-                .AsImplementedInterfaces();
+            builder.RegisterEntryPoint<UIService>(Lifetime.Singleton);
         }
     }
 }

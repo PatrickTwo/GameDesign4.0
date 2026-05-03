@@ -14,7 +14,7 @@ namespace GameDesign4.UI.Presentation
         [SerializeField] private Button inventoryButton;
         [SerializeField] private Button productionButton;
 
-        private Runtime.IUiPanelService uiPanelService;
+        private Runtime.IUIService uiPanelService;
 
         /// <summary>
         /// 当前面板唯一标识。
@@ -26,7 +26,7 @@ namespace GameDesign4.UI.Presentation
         /// 注入 HUD 所需的面板控制服务。
         /// </summary>
         [Inject]
-        public void Construct(Runtime.IUiPanelService uiPanelService)
+        public void Construct(Runtime.IUIService uiPanelService)
         {
             this.uiPanelService = uiPanelService;
             BindButtons();

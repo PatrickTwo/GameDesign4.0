@@ -18,17 +18,17 @@ MonoBehaviour:
   m_GUID: 253328b97657551459c8189612e85532
   m_SerializeEntries:
   - m_GUID: a0e86c903848ef84eb40822fb4f51298
-    m_Address: Building.Runtime.Placeholder
+    m_Address: Building.Runtime.Placeholder.Prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bf4e2f58e2e639d48a260f3f2daa1172
-    m_Address: building.garage
+    m_Address: Building.Runtime.Garage.Prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c99b36ff795d7824dae534a6529e102c
-    m_Address: building.barrack
+    m_Address: Building.Runtime.Barracks.Prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

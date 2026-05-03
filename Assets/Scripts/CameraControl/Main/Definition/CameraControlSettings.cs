@@ -7,16 +7,16 @@ namespace GameDesign4.CameraControl.Definition
     /// 相机控制参数。
     /// 负责存储 RTS 相机平移、缩放与旋转配置。
     /// </summary>
-    [Serializable]
-    public sealed class CameraControlSettings
+    [CreateAssetMenu(menuName = "GameDesign4/CameraControl/Settings", fileName = "CameraControlSettings")]
+    public sealed class CameraControlSettings : ScriptableObject
     {
         [Header("平移")]
-        [SerializeField] private float moveSpeed = 50f;
+        [SerializeField] private float moveSpeed = 20f;
         [SerializeField] private float moveSpeedScaleFactor = 2f;
 
         [Header("缩放")]
         [SerializeField] private float zoomSmoothFactor = 10f;
-        [SerializeField] private float zoomSpeed = 100f;
+        [SerializeField] private float zoomSpeed = 20f;
         [SerializeField] private float zoomSensitivity = 1f;
         [SerializeField] private float minZoomDistance = 30f;
         [SerializeField] private float maxZoomDistance = 200f;

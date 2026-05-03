@@ -4,6 +4,7 @@
     "references": [
         "Shared",
         "Command.Contracts",
+        "Build.Contracts",
         "Unit.Contracts",
         "Unity.InputSystem",
         "VContainer",

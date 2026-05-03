@@ -1,5 +1,7 @@
 using System;
+using GameDesign4.Build.Contracts;
 using GameDesign4.Command.Contracts;
+using GameDesign4.Infrastructure.Runtime.Pointer;
 using GameDesign4.SceneInteract.Presentation.Input.Generated;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,11 +23,11 @@ namespace GameDesign4.SceneInteract.Runtime
         /// <summary>
         /// 构造场景交互主控制器。
         /// </summary>
-        public SceneInteractController(ICommandBus commandBus)
+        public SceneInteractController(ICommandBus commandBus, IBuildPlacementService buildPlacementService)
         {
             pointerContextService = new PointerContextService();
             selectionService = new SceneSelectionService();
-            commandService = new SceneCommandService(commandBus, selectionService);
+            commandService = new SceneCommandService(commandBus, buildPlacementService, selectionService);
         }
 
         #region 生命周期
@@ -75,7 +77,9 @@ namespace GameDesign4.SceneInteract.Runtime
                 return;
             }
 
-            commandService.HandlePrimaryClick(BuildPointerContext());
+            PointerContext pointerContext = BuildPointerContext();
+            SceneSelectable hitSelectable = ResolveSceneSelectable(pointerContext.HitTransform);
+            commandService.HandlePrimaryClick(pointerContext, hitSelectable);
         }
 
         /// <summary>
@@ -88,7 +92,9 @@ namespace GameDesign4.SceneInteract.Runtime
                 return;
             }
 
-            commandService.HandleSecondaryClick(BuildPointerContext());
+            PointerContext pointerContext = BuildPointerContext();
+            SceneSelectable hitSelectable = ResolveSceneSelectable(pointerContext.HitTransform);
+            commandService.HandleSecondaryClick(pointerContext, hitSelectable);
         }
 
         /// <summary>
@@ -113,6 +119,19 @@ namespace GameDesign4.SceneInteract.Runtime
         {
             Vector2 screenPosition = gameInput.SceneInteract.PointerPosition.ReadValue<Vector2>();
             return pointerContextService.GetPointerContext(screenPosition);
+        }
+
+        /// <summary>
+        /// 从命中的场景节点解析可选择对象。
+        /// </summary>
+        private static SceneSelectable ResolveSceneSelectable(Transform hitTransform)
+        {
+            if (hitTransform == null)
+            {
+                return null;
+            }
+
+            return hitTransform.GetComponentInParent<SceneSelectable>();
         }
         #endregion
     }
