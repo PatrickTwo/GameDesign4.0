@@ -1,5 +1,5 @@
 using System;
-using GameDesign4.Shared.Utilities;
+using GameDesign4.Infrastructure.Utilities;
 
 namespace GameDesign4.SceneInteract.Runtime
 {

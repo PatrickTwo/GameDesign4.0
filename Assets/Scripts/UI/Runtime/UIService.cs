@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using GameDesign4.Shared.Runtime.Logging;
-using GameDesign4.Shared.Utilities;
+using GameDesign4.Infrastructure.Runtime.Logging;
+using GameDesign4.Infrastructure.Utilities;
 using GameDesign4.UI.Definitions;
 using GameDesign4.UI.Presentation;
 using UnityEngine;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameDesign4.Shared.Runtime.Logging
+namespace GameDesign4.Infrastructure.Runtime.Logging
 {
     /// <summary>
     /// 游戏开发日志全局入口。

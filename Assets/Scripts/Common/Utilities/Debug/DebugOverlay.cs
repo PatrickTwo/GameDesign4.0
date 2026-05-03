@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using GameDesign4.Shared.Runtime.Logging;
-using GameDesign4.Shared.Utilities;
+using GameDesign4.Infrastructure.Runtime.Logging;
+using GameDesign4.Infrastructure.Utilities;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VContainer;
 
-namespace GameDesign4.Shared.Runtime.Debug
+namespace GameDesign4.Infrastructure.Runtime.Debug
 {
     /// <summary>
     /// 通用调试叠层组件。

@@ -3,9 +3,11 @@
     "rootNamespace": "GameDesign4.Unit",
     "references": [
         "Shared",
+        "Infrastructure.Contracts",
         "Unit.Contracts",
         "Command.Contracts",
-        "VContainer"
+        "VContainer",
+        "Common"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

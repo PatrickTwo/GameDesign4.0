@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GameDesign4.Shared.Utilities
+namespace GameDesign4.Infrastructure.Utilities
 {
     /// <summary>
     /// 通用前置条件守卫工具。

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using GameDesign4.Shared.Contracts.Events;
-using GameDesign4.Shared.Utilities;
+using GameDesign4.Infrastructure.Contracts.Events;
+using GameDesign4.Infrastructure.Utilities;
 
-namespace GameDesign4.Shared.Runtime.Events
+namespace GameDesign4.Infrastructure.Runtime.Events
 {
     /// <summary>
     /// 跨模块事件分发器。

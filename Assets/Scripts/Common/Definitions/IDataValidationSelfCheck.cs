@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GameDesign4.Shared.Definitions
+namespace GameDesign4.Infrastructure.Definitions
 {
     /// <summary>
     /// 数据资产自校验接口。

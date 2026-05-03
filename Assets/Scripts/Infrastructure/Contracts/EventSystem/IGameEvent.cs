@@ -1,4 +1,4 @@
-namespace GameDesign4.Shared.Contracts.Events
+namespace GameDesign4.Infrastructure.Contracts.Events
 {
     /// <summary>
     /// 跨模块业务事件接口。

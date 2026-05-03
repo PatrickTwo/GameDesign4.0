@@ -1,7 +1,7 @@
 using GameDesign4.Command.Contracts;
 using GameDesign4.Command.Runtime;
 using GameDesign4.SceneInteract.Runtime;
-using GameDesign4.Shared.Contracts.Events;
+using GameDesign4.Infrastructure.Contracts.Events;
 using GameDesign4.UI.Runtime;
 using UnityEngine;
 using UnityEngine.EventSystems;

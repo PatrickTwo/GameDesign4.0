@@ -1,4 +1,4 @@
-namespace GameDesign4.Shared.Runtime.Debug
+namespace GameDesign4.Infrastructure.Runtime.Debug
 {
     /// <summary>
     /// 调试输出接口。

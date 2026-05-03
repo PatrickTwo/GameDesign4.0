@@ -1,8 +1,8 @@
 using System;
 using GameDesign4.Command.Contracts;
-using GameDesign4.Shared.Contracts.Events;
-using GameDesign4.Shared.Runtime.Logging;
-using GameDesign4.Shared.Utilities;
+using GameDesign4.Infrastructure.Contracts.Events;
+using GameDesign4.Infrastructure.Runtime.Logging;
+using GameDesign4.Infrastructure.Utilities;
 
 namespace GameDesign4.Command.Runtime
 {

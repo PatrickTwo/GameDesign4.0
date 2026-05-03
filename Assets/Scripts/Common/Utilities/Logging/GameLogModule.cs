@@ -1,4 +1,4 @@
-namespace GameDesign4.Shared.Runtime.Logging
+namespace GameDesign4.Infrastructure.Runtime.Logging
 {
     /// <summary>
     /// 预设日志模块枚举。

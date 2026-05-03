@@ -1,17 +1,18 @@
 {
-  "name": "Unit.Contracts",
-  "rootNamespace": "GameDesign4.Unit.Contracts",
-  "references": [
-    "Shared",
-    "Command.Contracts"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Unit.Contracts",
+    "rootNamespace": "GameDesign4.Unit.Contracts",
+    "references": [
+        "Shared",
+        "Command.Contracts",
+        "Infrastructure.Contracts"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

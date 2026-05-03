@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using GameDesign4.Shared.Definitions;
+using GameDesign4.Infrastructure.Definitions;
 using UnityEditor;
 using UnityEngine;
 

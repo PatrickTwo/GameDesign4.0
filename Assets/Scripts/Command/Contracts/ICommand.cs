@@ -1,4 +1,4 @@
-using GameDesign4.Shared.Contracts.Events;
+using GameDesign4.Infrastructure.Contracts.Events;
 
 namespace GameDesign4.Command.Contracts
 {

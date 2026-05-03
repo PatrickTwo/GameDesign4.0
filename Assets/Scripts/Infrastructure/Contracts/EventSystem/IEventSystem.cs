@@ -1,6 +1,6 @@
 using System;
 
-namespace GameDesign4.Shared.Contracts.Events
+namespace GameDesign4.Infrastructure.Contracts.Events
 {
     /// <summary>
     /// 跨模块事件分发器接口。

@@ -1,6 +1,6 @@
 using System;
 
-namespace GameDesign4.Shared.Runtime
+namespace GameDesign4.Infrastructure.Runtime
 {
     #region 通用操作结果
     /// <summary>
