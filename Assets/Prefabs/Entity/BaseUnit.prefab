@@ -451,9 +451,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164f9aaf19e569046905b69baf682285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetType: 1
-  targetObject: {fileID: 0}
-  selectionIndicator: {fileID: 7599446718499506701}
+  targetRoot: {fileID: 3657085425286474122}
+  selectionVisual: {fileID: 7599446718499506701}
 --- !u!1 &8836288865859129871
 GameObject:
   m_ObjectHideFlags: 0

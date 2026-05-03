@@ -1,14 +1,11 @@
 {
-    "name": "SceneInteract",
-    "rootNamespace": "GameDesign4.SceneInteract",
+    "name": "CameraControl.Main",
+    "rootNamespace": "GameDesign4.CameraControl",
     "references": [
-        "Shared",
-        "Command.Contracts",
-        "Unit.Contracts",
+        "CameraControl.Contracts",
         "Unity.InputSystem",
         "VContainer",
-        "Common",
-        "Infrastructure.Contracts"
+        "Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

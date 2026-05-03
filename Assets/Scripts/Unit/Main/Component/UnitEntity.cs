@@ -1,7 +1,6 @@
 using System;
 using GameDesign4.Combat.Contracts.Service;
 using GameDesign4.Command.Contracts;
-using GameDesign4.Infrastructure.Utilities;
 using GameDesign4.Unit.Contracts.Command;
 using GameDesign4.Unit.Contracts.Identity;
 using GameDesign4.Unit.Contracts.Model;
@@ -62,16 +61,7 @@ namespace GameDesign4.Unit.Component
         {
             this.commandBus = commandBus;
             this.combatRuleService = combatRuleService;
-            SubscribeCommand();
-        }
-        #endregion
-
-        #region 生命周期
-        /// <summary>
-        /// 初始化单位运行时对象。
-        /// </summary>
-        private void Awake()
-        {
+            TrySubscribeCommands();
             // 初始化功能组件
             visualController = new UnitVisualController(transform, animator, selectionIndicator);
 
@@ -81,6 +71,9 @@ namespace GameDesign4.Unit.Component
 
             unitBrain = new UnitBrain(movementExecutor, attackExecutor, autoCombatExecutor, visualController);
         }
+        #endregion
+
+        #region 生命周期
 
         /// <summary>
         /// 注册单位并尝试订阅命令总线。
@@ -88,7 +81,7 @@ namespace GameDesign4.Unit.Component
         private void OnEnable()
         {
             UnitRegistry.Register(this);
-            SubscribeCommand();
+            TrySubscribeCommands();
         }
 
         /// <summary>
@@ -149,12 +142,24 @@ namespace GameDesign4.Unit.Component
 
         #region 命令注册与销毁
         /// <summary>
-        /// 按需订阅命令总线。
+        /// 在依赖就绪后按需订阅命令总线。
         /// </summary>
-        private void SubscribeCommand()
+        private void TrySubscribeCommands()
         {
-            moveCommandSubscription = commandBus.Subscribe<UnitMoveCommand>(ApplyMoveCommand);
-            attackCommandSubscription = commandBus.Subscribe<UnitAttackCommand>(ApplyAttackCommand);
+            if (commandBus == null)
+            {
+                return;
+            }
+
+            if (moveCommandSubscription == null)
+            {
+                moveCommandSubscription = commandBus.Subscribe<UnitMoveCommand>(ApplyMoveCommand);
+            }
+
+            if (attackCommandSubscription == null)
+            {
+                attackCommandSubscription = commandBus.Subscribe<UnitAttackCommand>(ApplyAttackCommand);
+            }
         }
 
         /// <summary>
@@ -162,14 +167,17 @@ namespace GameDesign4.Unit.Component
         /// </summary>
         private void ReleaseCommandSubscriptions()
         {
-            Guard.EnsureNotNull("事件释放句柄为空", moveCommandSubscription, attackCommandSubscription);
+            if (moveCommandSubscription != null)
+            {
+                moveCommandSubscription.Dispose();
+                moveCommandSubscription = null;
+            }
 
-            moveCommandSubscription.Dispose();
-            moveCommandSubscription = null;
-
-            attackCommandSubscription.Dispose();
-            attackCommandSubscription = null;
-
+            if (attackCommandSubscription != null)
+            {
+                attackCommandSubscription.Dispose();
+                attackCommandSubscription = null;
+            }
         }
         #endregion
 

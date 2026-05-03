@@ -10,7 +10,7 @@ namespace GameDesign4.Infrastructure.Runtime.Debug
     /// <summary>
     /// 通用调试叠层组件。
     /// 通过 VContainer 注入所有 IDebugOutput 实现，使用 UI Toolkit 渲染调试信息。
-    /// Inspector 绑定 PanelSettings 和 UXML 模板资产。
+    /// Inspector 绑定 PanelSettings、UIDocument 根布局和输出模板资产。
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public sealed class DebugOverlay : MonoBehaviour
@@ -24,6 +24,7 @@ namespace GameDesign4.Infrastructure.Runtime.Debug
         private UIDocument uiDocument;
         private VisualElement rootContainer;
         private bool isUIBuilt;
+        private bool isVisible = true;
 
         #region 依赖注入
         /// <summary>
@@ -54,6 +55,7 @@ namespace GameDesign4.Infrastructure.Runtime.Debug
         /// </summary>
         private void Update()
         {
+            HandleToggleInput();
             RefreshOutputs();
         }
         #endregion
@@ -78,11 +80,12 @@ namespace GameDesign4.Infrastructure.Runtime.Debug
         /// </summary>
         private void BuildUI()
         {
-            rootContainer = new VisualElement();
-            rootContainer.style.position = Position.Absolute;
-            rootContainer.style.left = 8;
-            rootContainer.style.top = 8;
-            rootContainer.style.flexDirection = FlexDirection.Column;
+            rootContainer = uiDocument.rootVisualElement.Q<VisualElement>("debug-overlay-root");
+            if (rootContainer == null)
+            {
+                GameLog.Warning(GameLogModule.Debug, "DebugOverlay 未找到名为 debug-overlay-root 的根节点，请检查 UIDocument Source Asset 配置。");
+                return;
+            }
 
             foreach (IDebugOutput output in outputs)
             {
@@ -98,9 +101,38 @@ namespace GameDesign4.Infrastructure.Runtime.Debug
                 outputLabels[output] = contentLabel;
             }
 
-            uiDocument.rootVisualElement.Add(rootContainer);
+            ApplyVisibility();
             isUIBuilt = true;
             GameLog.Log(GameLogModule.Debug, "DebugOverlay UI 构建完成");
+        }
+        #endregion
+
+        #region 显示状态控制
+        /// <summary>
+        /// 处理 F1 显示开关。
+        /// </summary>
+        private void HandleToggleInput()
+        {
+            if (Input.GetKeyDown(KeyCode.F1) == false)
+            {
+                return;
+            }
+
+            isVisible = isVisible == false;
+            ApplyVisibility();
+        }
+
+        /// <summary>
+        /// 应用当前显示状态到根容器。
+        /// </summary>
+        private void ApplyVisibility()
+        {
+            if (rootContainer == null)
+            {
+                return;
+            }
+
+            rootContainer.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
         }
         #endregion
 

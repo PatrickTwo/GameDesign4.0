@@ -1,12 +1,16 @@
+using Cinemachine;
+using GameDesign4.CameraControl.Contracts.Service;
+using GameDesign4.CameraControl.Definition;
+using GameDesign4.CameraControl.Runtime;
 using GameDesign4.Command.Contracts;
 using GameDesign4.Command.Runtime;
 using GameDesign4.Combat.Contracts.Service;
 using GameDesign4.Combat.Runtime;
+using GameDesign4.Infrastructure.Runtime.Debug;
 using GameDesign4.SceneInteract.Runtime;
 using GameDesign4.Infrastructure.Contracts.Events;
 using GameDesign4.UI.Runtime;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using VContainer;
 using VContainer.Unity;
 
@@ -19,11 +23,15 @@ namespace GameDesign4.GameFlow
     public class GameLifetimeScope : LifetimeScope
     {
         [SerializeField] private Transform uiRoot;
+        [SerializeField] private Transform cameraTarget;
+        [SerializeField] private CinemachineVirtualCamera virtualCamera;
+        [SerializeField] private CameraControlSettings cameraControlSettings = new CameraControlSettings();
+
 
         protected override void Configure(IContainerBuilder builder)
         {
-            // 共享事件分发器：承载跨模块事实通知，不承担命令职责。
-            builder.Register<EventSystem>(Lifetime.Singleton)
+            // XXX 这里的EventSystem因与Infrastructure.Runtime.Events.EventSystem名称冲突，已经产生过bug，因此这里用显示命名空间，防止再次混淆
+            builder.Register<Infrastructure.Runtime.Events.EventSystem>(Lifetime.Singleton)
                 .AsSelf()
                 .As<IEventSystem>();
 
@@ -39,8 +47,20 @@ namespace GameDesign4.GameFlow
                 .As<IUnitCombatRuleService>();
 
 
-            // 指针上下文服务：负责射线查询，生成指针上下文。
-            builder.Register<PointerContextService>(Lifetime.Singleton);
+            // 场景交互控制器：由容器驱动输入生命周期并派发场景交互命令。
+            builder.RegisterEntryPoint<SceneInteractController>();
+
+            // 相机控制上下文：聚合相机目标、虚拟相机与控制参数。
+            builder.RegisterInstance(new CameraControlSceneContext(cameraTarget, virtualCamera, cameraControlSettings));
+
+            // RTS 相机控制器：负责平移、缩放、旋转，并对外暴露启停能力。
+            builder.RegisterEntryPoint<CameraController>()
+                .AsSelf()
+                .As<ICameraControlService>();
+
+            // 指针调试输出：为 DebugOverlay 提供实时鼠标命中上下文文本。
+            builder.Register<PointerContextDebugOutput>(Lifetime.Singleton)
+                .As<IDebugOutput>();
 
 
             builder.RegisterInstance(uiRoot);
@@ -49,15 +69,6 @@ namespace GameDesign4.GameFlow
             builder.Register<UIService>(Lifetime.Singleton)
                 .AsSelf()
                 .AsImplementedInterfaces();
-
-
-            // HACK UIService 默认是懒加载，这里在容器构建后主动解析一次，确保启动阶段完成 UI 缓存初始化。
-            // 后续当 UIService 被依赖时，则不需要再显式解析。
-            builder.RegisterBuildCallback(
-                delegate(IObjectResolver container)
-                {
-                    container.Resolve<IUiPanelService>();
-                });
         }
     }
 }
