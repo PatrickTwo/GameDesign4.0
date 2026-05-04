@@ -22,6 +22,7 @@ namespace GameDesign4.Build.Runtime
     /// </summary>
     public sealed class BuildPlacementService : IBuildPlacementService, ITickable
     {
+        private readonly IBuildingRegistry buildingProductionRegistry;
         private readonly IGridControlService gridControlService;
         private readonly IGridQueryService gridQueryService;
         private readonly IObjectResolver objectResolver;
@@ -36,11 +37,13 @@ namespace GameDesign4.Build.Runtime
         /// </summary>
         public BuildPlacementService(
             BuildCatalogDef buildCatalog,
+            IBuildingRegistry buildingProductionRegistry,
             IObjectResolver objectResolver,
             IGridControlService gridControlService,
             IGridQueryService gridQueryService,
             PointerContextService pointerContextService)
         {
+            this.buildingProductionRegistry = buildingProductionRegistry;
             this.gridControlService = gridControlService;
             this.gridQueryService = gridQueryService;
             this.objectResolver = objectResolver;
@@ -263,6 +266,9 @@ namespace GameDesign4.Build.Runtime
 
             // 正式建筑进入场景后执行依赖注入，便于后续接运行时逻辑。
             objectResolver.InjectGameObject(buildingInstance);
+
+            // 建筑放置成功后登记生产能力，供生产系统分配产能槽。
+            buildingProductionRegistry.RegisterBuilding(building.Id);
         }
         #endregion
 

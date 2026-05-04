@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 3028336552024064347}
   - component: {fileID: 8028213473953272285}
   - component: {fileID: 7400495941568789107}
+  - component: {fileID: 118500001}
   m_Layer: 0
   m_Name: ProductItemUI
   m_TagString: Untagged
@@ -392,3 +393,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &118500001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6457216641915204044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1d6d1d1f0a948fba3c1d2a7f5b2e901, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameText: {fileID: 5253015740272961093}
+  durationText: {fileID: 3902021209865154682}
+  selectButton: {fileID: 7400495941568789107}

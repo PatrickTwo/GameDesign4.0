@@ -668,6 +668,7 @@ MonoBehaviour:
   - {fileID: 753089211}
   uiPanelCatalog: {fileID: 11400000, guid: 1f3b5f9f2d6c4c1a8e7b0d3f5a9c1e21, type: 2}
   buildCatalog: {fileID: 11400000, guid: 8a0c3e5f1b4d6a2c0e3f4a5b6c7d8e05, type: 2}
+  productionCatalog: {fileID: 11400000, guid: 901b87e4d60a63347839245f5fca94d9, type: 2}
   uiRoot: {fileID: 684628525}
   cameraTarget: {fileID: 1397693272}
   virtualCamera: {fileID: 571531464}

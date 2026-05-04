@@ -25,6 +25,11 @@ using GameDesign4.Grid.Contracts.Service;
 using GameDesign4.Grid.Contracts.Model;
 using GameDesign4.Grid.Runtime;
 using GameDesign4.Grid.Definition;
+using GameDesign4.Inventory.Contracts;
+using GameDesign4.Inventory.Runtime;
+using GameDesign4.Production.Contracts;
+using GameDesign4.Production.Definition;
+using GameDesign4.Production.Runtime;
 
 namespace GameDesign4.GameFlow
 {
@@ -37,6 +42,7 @@ namespace GameDesign4.GameFlow
         [Header("资源管理")]
         [SerializeField] private UiPanelCatalogDef uiPanelCatalog;
         [SerializeField] private BuildCatalogDef buildCatalog;
+        [SerializeField] private ProductionCatalogDef productionCatalog;
         [Header("UI根节点")]
         [SerializeField] private UIRoot uiRoot;
         [Header("相机控制")]
@@ -112,10 +118,35 @@ namespace GameDesign4.GameFlow
 
             builder.RegisterInstance(buildCatalog);
 
+            // 已建成生产建筑注册表：为生产系统提供当前可用产能数量。
+            builder.Register<BuildingRegistry>(Lifetime.Singleton)
+                .AsSelf()
+                .As<IBuildingRegistry>();
+
             // 建造放置服务：负责建造模式、预览、放置、取消与每帧预览跟随。
             builder.RegisterEntryPoint<BuildPlacementService>()
                 .AsSelf()
                 .As<IBuildPlacementService>();
+
+            ProductionCatalogDef resolvedProductionCatalog = productionCatalog;
+            if (resolvedProductionCatalog == null)
+            {
+                // XXX: 当前场景若未绑定 ProductionCatalogDef，生产面板会为空，因此这里回退为空目录并输出中文警告，避免容器装配直接失败。
+                resolvedProductionCatalog = ScriptableObject.CreateInstance<ProductionCatalogDef>();
+                GameLog.Warning(GameLogModule.Production, "未绑定 ProductionCatalogDef，生产面板将为空。");
+            }
+
+            builder.RegisterInstance(resolvedProductionCatalog);
+
+            // 仓库服务：负责统一维护生产完成后的入库结果。
+            builder.Register<InventoryService>(Lifetime.Singleton)
+                .AsSelf()
+                .As<IInventoryService>();
+
+            // 生产服务：负责排产、等待队列、分配产能、推进计时与完成入库。
+            builder.RegisterEntryPoint<ProductionService>()
+                .AsSelf()
+                .As<IProductionService>();
 
             // UI 服务：根据目录配置加载并缓存全部面板。
             builder.RegisterEntryPoint<UIService>(Lifetime.Singleton);

@@ -125,6 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6290116718962345972}
   - component: {fileID: 6602869559523154624}
+  - component: {fileID: 8788700475006388694}
   m_Layer: 0
   m_Name: BaseBuilding
   m_TagString: Untagged
@@ -164,6 +165,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetRoot: {fileID: 6290116718962345972}
   selectionVisual: {fileID: 0}
+--- !u!208 &8788700475006388694
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3167355441559584040}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &4725974502598784443
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8720021235486408434
 Transform:
   m_ObjectHideFlags: 0

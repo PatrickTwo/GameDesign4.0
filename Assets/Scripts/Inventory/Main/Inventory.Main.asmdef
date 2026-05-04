@@ -1,0 +1,17 @@
+{
+    "name": "Inventory.Main",
+    "rootNamespace": "GameDesign4.Inventory",
+    "references": [
+        "Inventory.Contracts",
+        "Common"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

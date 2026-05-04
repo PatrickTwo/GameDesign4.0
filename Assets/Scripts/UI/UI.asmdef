@@ -3,6 +3,7 @@
     "rootNamespace": "GameDesign4.UI",
     "references": [
         "Shared",
+        "Inventory.Contracts",
         "UniTask",
         "VContainer",
         "Unity.Addressables",

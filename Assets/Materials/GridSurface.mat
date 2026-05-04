@@ -98,9 +98,9 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GridHeight: 100
+    - _GridHeight: 200
     - _GridLineThickness: 0.02
-    - _GridWidth: 100
+    - _GridWidth: 200
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005

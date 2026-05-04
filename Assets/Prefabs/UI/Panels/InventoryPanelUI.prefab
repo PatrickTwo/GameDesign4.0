@@ -347,3 +347,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   titleText: {fileID: 4736768051855971600}
+  slotContainer: {fileID: 296569958791830534}
+  pfSlot: {fileID: 5117018469048809870, guid: 503928d197d1ff34f9b064a16ebc2833, type: 3}

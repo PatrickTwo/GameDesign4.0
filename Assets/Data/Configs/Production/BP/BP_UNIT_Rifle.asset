@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6cbeb8ff3a34ac7a486ff9577a40857, type: 3}
+  m_Name: BP_UNIT_Rifle
+  m_EditorClassIdentifier: 
+  id: rifle
+  displayName: "\u6B65\u5175"
+  icon: {fileID: 0}
+  durationSeconds: 3
+  producerBuilding: {fileID: 11400000, guid: 4c6e9a1b7d2f4b3c8a0e1f2d3c4b5a61, type: 2}
+  product: {fileID: 11400000, guid: 80dc986b04196bf4191abcf7e137172e, type: 2}

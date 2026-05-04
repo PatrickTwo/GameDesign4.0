@@ -1,0 +1,23 @@
+{
+    "name": "Production.Main",
+    "rootNamespace": "GameDesign4.Production",
+    "references": [
+        "Production.Contracts",
+        "Inventory.Contracts",
+        "Build.Contracts",
+        "Build.Main",
+        "Common",
+        "UI",
+        "VContainer",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
