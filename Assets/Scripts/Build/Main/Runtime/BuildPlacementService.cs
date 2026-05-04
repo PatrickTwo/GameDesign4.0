@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameDesign4.Build.Contracts;
-using GameDesign4.Build.Contracts.ViewData;
 using GameDesign4.Build.Definition;
 using GameDesign4.Build.Presentation;
 using GameDesign4.Infrastructure.Runtime.Logging;
@@ -25,7 +24,7 @@ namespace GameDesign4.Build.Runtime
         private readonly PointerContextService pointerContextService;
         private readonly BuildPlacementValidator validator;
         private readonly BuildPlacementState state;
-        private readonly List<BuildPanelEntry> panelEntries;
+        private readonly List<BuildingBlueprintDef> availableBlueprints;
         private readonly Dictionary<string, BuildingBlueprintDef> blueprintLookup;
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace GameDesign4.Build.Runtime
             pointerContextService = new PointerContextService();
             validator = new BuildPlacementValidator();
             state = new BuildPlacementState();
-            panelEntries = new List<BuildPanelEntry>();
+            availableBlueprints = new List<BuildingBlueprintDef>();
             blueprintLookup = new Dictionary<string, BuildingBlueprintDef>();
 
             IReadOnlyList<BuildingBlueprintDef> blueprints = buildCatalog.Blueprints;
@@ -50,7 +49,7 @@ namespace GameDesign4.Build.Runtime
                 }
 
                 blueprintLookup[blueprint.Id] = blueprint;
-                panelEntries.Add(new BuildPanelEntry(blueprint.Id, blueprint.DisplayName, blueprint.Icon));
+                availableBlueprints.Add(blueprint);
             }
         }
 
@@ -84,15 +83,17 @@ namespace GameDesign4.Build.Runtime
         }
         #endregion
 
-        #region 面板入口
+        #region 面板数据
         /// <summary>
-        /// 获取建造面板展示条目。
+        /// 获取当前可展示的建造蓝图列表。
         /// </summary>
-        public IReadOnlyList<BuildPanelEntry> GetPanelEntries()
+        public IReadOnlyList<BuildingBlueprintDef> GetAvailableBlueprints()
         {
-            return panelEntries;
+            return availableBlueprints;
         }
+        #endregion
 
+        #region 面板入口
         /// <summary>
         /// 开始一次新的建造放置。
         /// </summary>

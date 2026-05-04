@@ -20,6 +20,9 @@ using GameDesign4.UI.Runtime;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using GameDesign4.Grid.Presentation;
+using GameDesign4.Grid.Contracts.Service;
+using GameDesign4.Grid.Runtime;
 
 namespace GameDesign4.GameFlow
 {
@@ -42,6 +45,10 @@ namespace GameDesign4.GameFlow
 
         protected override void Configure(IContainerBuilder builder)
         {
+            // 网格系统
+            builder.Register<GridController>(Lifetime.Singleton).As<IGridControlService>();
+            builder.Register<GridQueryService>(Lifetime.Singleton).As<IGridQueryService>();
+
             // XXX 这里的EventSystem因与Infrastructure.Runtime.Events.EventSystem名称冲突，已经产生过bug，因此这里用显示命名空间，防止再次混淆
             builder.Register<Infrastructure.Runtime.Events.EventSystem>(Lifetime.Singleton)
                 .AsSelf()

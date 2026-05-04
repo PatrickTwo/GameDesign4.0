@@ -6,7 +6,6 @@
 
 | 接口 | 说明 |
 | --- | --- |
-| `IBuildPlacementService.GetPanelEntries` | 读取建造面板所需的蓝图条目视图数据 |
 | `IBuildPlacementService.StartPlacement` | 基于蓝图标识进入建造模式 |
 | `IBuildPlacementService.HandlePrimaryAction` | 处理建造模式下的左键放置 |
 | `IBuildPlacementService.HandleSecondaryAction` | 处理建造模式下的右键取消 |
@@ -45,12 +44,13 @@
 
 ```mermaid
 flowchart TD
-    A["BuildPanelController 点击蓝图"] --> B["IBuildPlacementService.StartPlacement"]
-    B --> C["BuildPlacementService 异步加载预览"]
-    D["BuildPlacementService.Tick"] --> E["Build 内部刷新预览位置"]
-    E --> C
-    F["SceneInteract 左键/右键/取消"] --> G["IBuildPlacementService.HandlePrimaryAction / HandleSecondaryAction / HandleCancelAction"]
-    G --> H["实例化正式建筑或释放预览"]
+    A["BuildPanelController 读取 BuildPlacementService.GetAvailableBlueprints"] --> B["BuildPanelController 点击蓝图"]
+    B --> C["IBuildPlacementService.StartPlacement"]
+    C --> D["BuildPlacementService 异步加载预览"]
+    E["BuildPlacementService.Tick"] --> F["Build 内部刷新预览位置"]
+    F --> D
+    G["SceneInteract 左键/右键/取消"] --> H["IBuildPlacementService.HandlePrimaryAction / HandleSecondaryAction / HandleCancelAction"]
+    H --> I["实例化正式建筑或释放预览"]
 ```
 
 ## 3. 当前实现备注
@@ -59,4 +59,5 @@ flowchart TD
 | --- | --- |
 | 当前风险 | 预览与正式建筑当前共用同一预制体，若后续建筑运行时脚本变重，需要继续补“预览材质”和更彻底的逻辑裁剪 |
 | 当前限制 | 合法性判定当前统一通过；放置成功后默认退出建造模式；目录资产仍需在场景装配中显式绑定 |
+| 当前结论 | `BuildPanelController` 已改为模块内直接依赖 `BuildPlacementService`，`IBuildPlacementService` 只保留跨模块放置契约 |
 | 后续建议 | 下一步补占地检测、材质高亮、连续建造与建造成功事件 |

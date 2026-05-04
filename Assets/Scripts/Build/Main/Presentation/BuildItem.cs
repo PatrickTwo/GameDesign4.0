@@ -9,7 +9,7 @@ namespace GameDesign4.Build.Presentation
     /// 建造面板条目控制器。
     /// 负责展示单个建筑条目名称，并响应点击。
     /// </summary>
-    public sealed class BuildItemController : MonoBehaviour
+    public sealed class BuildItem : MonoBehaviour
     {
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private Button selectButton;

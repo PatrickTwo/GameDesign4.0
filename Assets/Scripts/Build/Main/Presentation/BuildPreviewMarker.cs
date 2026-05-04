@@ -31,6 +31,7 @@ namespace GameDesign4.Build.Presentation
 
             target.layer = layer;
             Transform targetTransform = target.transform;
+            // 递归设置子物体层级
             for (int index = 0; index < targetTransform.childCount; index++)
             {
                 SetLayerRecursively(targetTransform.GetChild(index).gameObject, layer);

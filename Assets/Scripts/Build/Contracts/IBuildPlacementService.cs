@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using GameDesign4.Build.Contracts.ViewData;
 using UnityEngine;
 
 namespace GameDesign4.Build.Contracts
 {
     /// <summary>
-    /// 建造放置服务接口。
-    /// 负责向外暴露建造面板数据、建造模式切换、预览更新与放置输入处理能力。
+     /// 建造放置服务接口。
+    /// 负责向外暴露建造模式切换与放置输入处理能力。
     /// </summary>
     public interface IBuildPlacementService
     {
@@ -15,12 +13,7 @@ namespace GameDesign4.Build.Contracts
         /// </summary>
         bool IsPlacementActive { get; }
 
-        #region 面板数据
-        /// <summary>
-        /// 获取建造面板展示条目。
-        /// </summary>
-        IReadOnlyList<BuildPanelEntry> GetPanelEntries();
-
+        #region 建造模式切换
         /// <summary>
         /// 基于蓝图标识开始一次建造放置。
         /// </summary>

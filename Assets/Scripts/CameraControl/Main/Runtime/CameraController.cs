@@ -51,10 +51,6 @@ namespace GameDesign4.CameraControl.Runtime
             isControlEnabled = true;
         }
 
-        /// <summary>
-        /// 当前是否允许操作相机。
-        /// </summary>
-        public bool IsControlEnabled => isControlEnabled;
 
         #region 控制开关
         /// <summary>

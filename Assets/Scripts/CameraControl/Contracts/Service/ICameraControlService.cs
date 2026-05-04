@@ -7,11 +7,6 @@ namespace GameDesign4.CameraControl.Contracts.Service
     public interface ICameraControlService
     {
         /// <summary>
-        /// 当前是否允许操作相机。
-        /// </summary>
-        bool IsControlEnabled { get; }
-
-        /// <summary>
         /// 启用相机控制。
         /// </summary>
         void EnableControl();
