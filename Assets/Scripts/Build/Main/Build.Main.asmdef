@@ -5,6 +5,7 @@
         "Build.Contracts",
         "Grid.Contracts",
         "Common",
+        "Interaction.Contracts",
         "UI",
         "UniTask",
         "VContainer",

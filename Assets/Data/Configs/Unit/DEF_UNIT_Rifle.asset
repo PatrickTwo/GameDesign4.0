@@ -20,3 +20,4 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  deployBuilding: {fileID: 11400000, guid: 4c6e9a1b7d2f4b3c8a0e1f2d3c4b5a61, type: 2}

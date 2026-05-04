@@ -4,6 +4,7 @@
     "references": [
         "Shared",
         "Inventory.Contracts",
+        "Interaction.Contracts",
         "UniTask",
         "VContainer",
         "Unity.Addressables",
@@ -11,7 +12,8 @@
         "Unity.InputSystem",
         "Unity.TextMeshPro",
         "Common",
-        "Input"
+        "Input",
+        "Unit.Main"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

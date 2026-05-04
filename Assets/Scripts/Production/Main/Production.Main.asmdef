@@ -5,7 +5,6 @@
         "Production.Contracts",
         "Inventory.Contracts",
         "Build.Contracts",
-        "Build.Main",
         "Common",
         "UI",
         "VContainer",

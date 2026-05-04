@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GameDesign4.Build.Component;
 using GameDesign4.Build.Contracts;
 using GameDesign4.Build.Definition;
 using GameDesign4.Build.Presentation;
 using GameDesign4.Grid.Contracts.Model;
 using GameDesign4.Grid.Contracts.Service;
+using GameDesign4.Infrastructure.Runtime;
 using GameDesign4.Infrastructure.Runtime.Logging;
 using GameDesign4.Infrastructure.Runtime.Pointer;
 using GameDesign4.Infrastructure.Utilities;
@@ -22,7 +24,7 @@ namespace GameDesign4.Build.Runtime
     /// </summary>
     public sealed class BuildPlacementService : IBuildPlacementService, ITickable
     {
-        private readonly IBuildingRegistry buildingProductionRegistry;
+        private readonly BuildingRegistry buildingRegistry;
         private readonly IGridControlService gridControlService;
         private readonly IGridQueryService gridQueryService;
         private readonly IObjectResolver objectResolver;
@@ -37,13 +39,13 @@ namespace GameDesign4.Build.Runtime
         /// </summary>
         public BuildPlacementService(
             BuildCatalogDef buildCatalog,
-            IBuildingRegistry buildingProductionRegistry,
+            BuildingRegistry buildingRegistry,
             IObjectResolver objectResolver,
             IGridControlService gridControlService,
             IGridQueryService gridQueryService,
             PointerContextService pointerContextService)
         {
-            this.buildingProductionRegistry = buildingProductionRegistry;
+            this.buildingRegistry = buildingRegistry;
             this.gridControlService = gridControlService;
             this.gridQueryService = gridQueryService;
             this.objectResolver = objectResolver;
@@ -129,64 +131,63 @@ namespace GameDesign4.Build.Runtime
         /// <summary>
         /// 处理建造模式下的左键输入。
         /// </summary>
-        public bool HandlePrimaryAction(Vector3 worldPosition, bool hasGroundHit, bool isOverUi)
+        public InputHandleResult HandlePrimaryAction(Vector3 worldPosition, bool hasGroundHit, bool isOverUi)
         {
             if (state.IsPlacementActive == false)
             {
-                return false;
+                return InputHandleResult.Continue;
             }
 
             // 建造模式开启后，左键优先由建造系统消费，避免透传到选择逻辑。
             if (hasGroundHit == false || isOverUi)
             {
-                return true;
+                return InputHandleResult.Continue;
             }
 
             BuildingBlueprintDef blueprint = state.CurrentBlueprint;
             GridFootprint? previewFootprint = state.PreviewFootprint;
             if (previewFootprint.HasValue == false || validator.CanPlace(blueprint, previewFootprint.Value) == false)
             {
-                return true;
+                return InputHandleResult.Continue;
             }
 
             Vector3 placementWorldPosition = state.PreviewPosition;
             gridQueryService.OccupyFootprint(previewFootprint.Value);
             InstantiatePlacedBuildingAsync(blueprint, placementWorldPosition, previewFootprint.Value).Forget();
 
-            // 当前版本一次点击完成一次建造，放置成功后直接退出建造模式。
             CancelPlacementInternal();
             GameLog.Log(GameLogModule.Build, $"放置建筑：{blueprint.DisplayName}");
-            return true;
+            return InputHandleResult.Completed;
         }
 
         /// <summary>
         /// 处理建造模式下的右键输入。
         /// </summary>
-        public bool HandleSecondaryAction()
+        public InputHandleResult HandleSecondaryAction()
         {
             if (state.IsPlacementActive == false)
             {
-                return false;
+                return InputHandleResult.Continue;
             }
 
             CancelPlacementInternal();
             GameLog.Log(GameLogModule.Build, "右键取消建造模式。");
-            return true;
+            return InputHandleResult.Cancelled;
         }
 
         /// <summary>
         /// 处理建造模式下的取消输入。
         /// </summary>
-        public bool HandleCancelAction()
+        public InputHandleResult HandleCancelAction()
         {
             if (state.IsPlacementActive == false)
             {
-                return false;
+                return InputHandleResult.Continue;
             }
 
             CancelPlacementInternal();
             GameLog.Log(GameLogModule.Build, "取消建造模式。");
-            return true;
+            return InputHandleResult.Cancelled;
         }
         #endregion
 
@@ -267,8 +268,16 @@ namespace GameDesign4.Build.Runtime
             // 正式建筑进入场景后执行依赖注入，便于后续接运行时逻辑。
             objectResolver.InjectGameObject(buildingInstance);
 
-            // 建筑放置成功后登记生产能力，供生产系统分配产能槽。
-            buildingProductionRegistry.RegisterBuilding(building.Id);
+            BuildingEntity buildingEntity = buildingInstance.GetComponent<BuildingEntity>();
+            if (buildingEntity != null)
+            {
+                // 注册到建筑注册表，供生产和部署系统查询。
+                buildingRegistry.RegisterBuilding(buildingEntity);
+            }
+            else
+            {
+                GameLog.Warning(GameLogModule.Build, $"建筑预制体缺少 BuildingEntity 组件：{building.DisplayName}");
+            }
         }
         #endregion
 

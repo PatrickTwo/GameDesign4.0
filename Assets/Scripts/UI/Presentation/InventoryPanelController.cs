@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using GameDesign4.Infrastructure.Definitions;
 using GameDesign4.Inventory.Contracts;
-using TMPro;
+using GameDesign4.Interaction.Contracts;
 using UnityEngine;
 using VContainer;
+using GameDesign4.UI.Runtime;
 
 namespace GameDesign4.UI.Presentation
 {
@@ -12,11 +14,12 @@ namespace GameDesign4.UI.Presentation
     /// </summary>
     public sealed class InventoryPanelController : BasePanel
     {
-        [SerializeField] private TMP_Text titleText;
         [SerializeField] private RectTransform slotContainer;
         [SerializeField] private GameObject pfSlot;
 
-        private readonly List<GameObject> spawnedSlots = new List<GameObject>();
+        private readonly List<InventorySlotUI> spawnedSlots = new List<InventorySlotUI>();
+        private IInteractionModeController interactionModeController;
+        private IUIController uiController;
         private IInventoryService inventoryService;
 
         /// <summary>
@@ -29,9 +32,14 @@ namespace GameDesign4.UI.Presentation
         /// 注入仓库面板所需的仓库服务。
         /// </summary>
         [Inject]
-        public void Construct(IInventoryService inventoryService)
+        public void Construct(
+            IInventoryService inventoryService,
+            IInteractionModeController interactionModeController,
+            IUIController uiController)
         {
             this.inventoryService = inventoryService;
+            this.interactionModeController = interactionModeController;
+            this.uiController = uiController;
             this.inventoryService.InventoryChanged += HandleInventoryChanged;
         }
 
@@ -80,16 +88,14 @@ namespace GameDesign4.UI.Presentation
             for (int index = 0; index < itemIds.Count; index++)
             {
                 string itemId = itemIds[index];
-                GameObject slotInstance = Instantiate(pfSlot, slotContainer);
+                InventorySlotUI slotInstance = Instantiate(pfSlot, slotContainer).GetComponent<InventorySlotUI>();
                 slotInstance.gameObject.SetActive(true);
 
-                TMP_Text itemNameText;
-                TMP_Text amountText;
-                ResolveSlotTexts(slotInstance, out itemNameText, out amountText);
+                EntityDef itemDefinition = inventoryService.GetDefinition(itemId);
+                int amount = inventoryService.GetAmount(itemId);
 
-                // 当前版本仓库面板只展示名称与数量，不引入额外槽位行为。
-                itemNameText.text = inventoryService.GetDisplayName(itemId);
-                amountText.text = inventoryService.GetAmount(itemId).ToString();
+                // 只有 UnitDef 类型条目会在格子内部弹出“部署”菜单。
+                slotInstance.Bind(itemDefinition, amount, () => HandleDeployRequested(itemDefinition));
                 spawnedSlots.Add(slotInstance);
             }
         }
@@ -101,7 +107,7 @@ namespace GameDesign4.UI.Presentation
         {
             for (int index = 0; index < spawnedSlots.Count; index++)
             {
-                GameObject spawnedSlot = spawnedSlots[index];
+                InventorySlotUI spawnedSlot = spawnedSlots[index];
                 if (spawnedSlot != null)
                 {
                     Destroy(spawnedSlot.gameObject);
@@ -112,28 +118,13 @@ namespace GameDesign4.UI.Presentation
         }
 
         /// <summary>
-        /// 解析仓库格子内的名称文本与数量文本。
+        /// 处理从仓库面板发起的部署请求。
         /// </summary>
-        private static void ResolveSlotTexts(GameObject slotInstance, out TMP_Text itemNameText, out TMP_Text amountText)
+        private void HandleDeployRequested(EntityDef itemDefinition)
         {
-            TMP_Text[] texts = slotInstance.GetComponentsInChildren<TMP_Text>(true);
-            itemNameText = null;
-            amountText = null;
-
-            for (int index = 0; index < texts.Length; index++)
-            {
-                TMP_Text text = texts[index];
-                if (text.name == "itemNameText")
-                {
-                    itemNameText = text;
-                    continue;
-                }
-
-                if (text.name == "amountText")
-                {
-                    amountText = text;
-                }
-            }
+            // 先进入部署模式，再关闭仓库面板，保证面板状态与交互状态同步切换。
+            interactionModeController.EnterDeploymentMode(itemDefinition);
+            uiController.ClosePanel(PanelId);
         }
         #endregion
     }

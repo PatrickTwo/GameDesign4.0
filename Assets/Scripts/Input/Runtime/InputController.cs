@@ -13,7 +13,7 @@ namespace GameDesign4.Input.Runtime
     /// </summary>
     public sealed class InputController : IInitializable, IDisposable, GameInput.IGlobalActions, GameInput.ISceneInteractActions, GameInput.IUIActions
     {
-        private readonly ISceneInteractInputConsumer sceneInteractInputConsumer;
+        private readonly IInteractionInputConsumer interactionInputConsumer;
         private readonly IUIInputConsumer uiInputConsumer;
         private GameInput gameInput;
 
@@ -21,10 +21,10 @@ namespace GameDesign4.Input.Runtime
         /// 构造输入控制器。
         /// </summary>
         public InputController(
-            ISceneInteractInputConsumer sceneInteractInputConsumer,
+            IInteractionInputConsumer interactionInputConsumer,
             IUIInputConsumer uiInputConsumer)
         {
-            this.sceneInteractInputConsumer = sceneInteractInputConsumer;
+            this.interactionInputConsumer = interactionInputConsumer;
             this.uiInputConsumer = uiInputConsumer;
         }
 
@@ -81,7 +81,7 @@ namespace GameDesign4.Input.Runtime
                 return;
             }
 
-            sceneInteractInputConsumer.HandleCancelAction();
+            interactionInputConsumer.HandleCancelAction();
         }
         #endregion
 
@@ -104,7 +104,7 @@ namespace GameDesign4.Input.Runtime
             }
 
             Vector2 screenPosition = gameInput.SceneInteract.PointerPosition.ReadValue<Vector2>();
-            sceneInteractInputConsumer.HandlePrimaryAction(screenPosition);
+            interactionInputConsumer.HandlePrimaryAction(screenPosition);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace GameDesign4.Input.Runtime
             }
 
             Vector2 screenPosition = gameInput.SceneInteract.PointerPosition.ReadValue<Vector2>();
-            sceneInteractInputConsumer.HandleSecondaryAction(screenPosition);
+            interactionInputConsumer.HandleSecondaryAction(screenPosition);
         }
 
         #endregion

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GameDesign4.Infrastructure.Definitions;
 
 namespace GameDesign4.Inventory.Contracts
 {
@@ -18,7 +19,12 @@ namespace GameDesign4.Inventory.Contracts
         /// <summary>
         /// 把指定物品数量加入仓库。
         /// </summary>
-        void AddItem(string itemId, string displayName, int amount);
+        void AddItem(EntityDef itemDef, int amount);
+
+        /// <summary>
+        /// 从仓库扣减指定物品数量。
+        /// </summary>
+        bool RemoveItem(string itemId, int amount);
 
         /// <summary>
         /// 获取当前仓库内物品 Id 列表。
@@ -29,6 +35,11 @@ namespace GameDesign4.Inventory.Contracts
         /// 获取指定物品显示名称。
         /// </summary>
         string GetDisplayName(string itemId);
+
+        /// <summary>
+        /// 获取指定物品定义。
+        /// </summary>
+        EntityDef GetDefinition(string itemId);
 
         /// <summary>
         /// 获取指定物品数量。

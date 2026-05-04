@@ -1,10 +1,11 @@
+using GameDesign4.Infrastructure.Runtime;
 using UnityEngine;
 
 namespace GameDesign4.Build.Contracts
 {
     /// <summary>
      /// 建造放置服务接口。
-    /// 负责向外暴露建造模式切换与放置输入处理能力。
+    /// 负责向外暴露建造放置初始化与输入处理能力。
     /// </summary>
     public interface IBuildPlacementService
     {
@@ -24,17 +25,17 @@ namespace GameDesign4.Build.Contracts
         /// <summary>
         /// 处理建造模式下的左键输入。
         /// </summary>
-        bool HandlePrimaryAction(Vector3 worldPosition, bool hasGroundHit, bool isOverUi);
+        InputHandleResult HandlePrimaryAction(Vector3 worldPosition, bool hasGroundHit, bool isOverUi);
 
         /// <summary>
         /// 处理建造模式下的右键输入。
         /// </summary>
-        bool HandleSecondaryAction();
+        InputHandleResult HandleSecondaryAction();
 
         /// <summary>
         /// 处理建造模式下的取消输入。
         /// </summary>
-        bool HandleCancelAction();
+        InputHandleResult HandleCancelAction();
         #endregion
     }
 }

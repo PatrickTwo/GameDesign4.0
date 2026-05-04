@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GameDesign4.Build.Definition;
 using GameDesign4.Build.Runtime;
+using GameDesign4.Interaction.Contracts;
 using GameDesign4.UI.Presentation;
 using TMPro;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace GameDesign4.Build.Presentation
 
         private readonly List<BuildItem> spawnedItems = new List<BuildItem>();
         private BuildPlacementService buildPlacementService;
+        private IInteractionModeController interactionModeController;
 
         /// <summary>
         /// 当前面板唯一标识。
@@ -32,9 +34,10 @@ namespace GameDesign4.Build.Presentation
         /// 注入建造面板所需的建造放置服务。
         /// </summary>
         [Inject]
-        public void Construct(BuildPlacementService buildPlacementService)
+        public void Construct(BuildPlacementService buildPlacementService, IInteractionModeController interactionModeController)
         {
             this.buildPlacementService = buildPlacementService;
+            this.interactionModeController = interactionModeController;
         }
         protected override void OnOpened()
         {
@@ -58,7 +61,7 @@ namespace GameDesign4.Build.Presentation
                 itemInstance.gameObject.SetActive(true);
 
                 // 每个条目仅负责把点击翻译成“开始放置指定蓝图”的请求。
-                itemInstance.Bind(blueprint.DisplayName, () => buildPlacementService.StartPlacement(blueprint.Id));
+                itemInstance.Bind(blueprint.DisplayName, () => interactionModeController.EnterBuildMode(blueprint.Id));
                 spawnedItems.Add(itemInstance);
             }
         }

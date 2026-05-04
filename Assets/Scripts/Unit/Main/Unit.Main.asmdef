@@ -7,6 +7,7 @@
         "Combat.Contracts",
         "Unit.Contracts",
         "Command.Contracts",
+        "Build.Contracts",
         "VContainer",
         "Common"
     ],

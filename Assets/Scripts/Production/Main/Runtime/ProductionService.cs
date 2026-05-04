@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GameDesign4.Build.Contracts;
+using GameDesign4.Build.Definition;
 using GameDesign4.Infrastructure.Runtime.Logging;
 using GameDesign4.Infrastructure.Utilities;
 using GameDesign4.Inventory.Contracts;
@@ -105,14 +106,14 @@ namespace GameDesign4.Production.Runtime
                     continue;
                 }
 
-                string producerBuildingId = blueprint.ProducerBuilding.Id;
-                int targetSlotCount = buildingProductionRegistry.GetBuildingCount(producerBuildingId);
-                int currentSlotCount = GetSlotCount(producerBuildingId);
+                BuildingDef producerBuilding = blueprint.ProducerBuilding;
+                int targetSlotCount = buildingProductionRegistry.GetBuildingCount(producerBuilding);
+                int currentSlotCount = GetSlotCount(producerBuilding);
 
                 // 当前版本建筑只增不减，因此这里只补足新增槽位，不处理缩容。
                 for (int slotIndex = currentSlotCount; slotIndex < targetSlotCount; slotIndex++)
                 {
-                    buildingSlots.Add(new ProductionBuildingSlotState(producerBuildingId, slotIndex));
+                    buildingSlots.Add(new ProductionBuildingSlotState(producerBuilding, slotIndex));
                 }
             }
         }
@@ -131,7 +132,7 @@ namespace GameDesign4.Production.Runtime
                     continue;
                 }
 
-                ProductionBuildingSlotState idleSlot = FindIdleSlot(task.Blueprint.ProducerBuilding.Id);
+                ProductionBuildingSlotState idleSlot = FindIdleSlot(task.Blueprint.ProducerBuilding);
                 if (idleSlot == null)
                 {
                     taskIndex++;
@@ -182,7 +183,7 @@ namespace GameDesign4.Production.Runtime
                     continue;
                 }
 
-                inventoryService.AddItem(completedTask.Blueprint.Product.Id, completedTask.Blueprint.Product.DisplayName, 1);
+                inventoryService.AddItem(completedTask.Blueprint.Product, 1);
                 GameLog.Log(GameLogModule.Production, $"生产完成并入库：{completedTask.Blueprint.Product.DisplayName}");
             }
 
@@ -192,12 +193,12 @@ namespace GameDesign4.Production.Runtime
         /// <summary>
         /// 获取指定建筑当前已创建的生产槽数量。
         /// </summary>
-        private int GetSlotCount(string producerBuildingId)
+        private int GetSlotCount(BuildingDef producerBuilding)
         {
             int count = 0;
             for (int index = 0; index < buildingSlots.Count; index++)
             {
-                if (buildingSlots[index].ProducerBuildingId == producerBuildingId)
+                if (buildingSlots[index].ProducerBuilding == producerBuilding)
                 {
                     count++;
                 }
@@ -209,12 +210,12 @@ namespace GameDesign4.Production.Runtime
         /// <summary>
         /// 查找指定建筑的空闲生产槽。
         /// </summary>
-        private ProductionBuildingSlotState FindIdleSlot(string producerBuildingId)
+        private ProductionBuildingSlotState FindIdleSlot(BuildingDef producerBuilding)
         {
             for (int index = 0; index < buildingSlots.Count; index++)
             {
                 ProductionBuildingSlotState slot = buildingSlots[index];
-                if (slot.ProducerBuildingId == producerBuildingId && slot.IsBusy == false)
+                if (slot.ProducerBuilding == producerBuilding && slot.IsBusy == false)
                 {
                     return slot;
                 }

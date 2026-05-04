@@ -1,0 +1,17 @@
+{
+    "name": "Interaction.Contracts",
+    "rootNamespace": "GameDesign4.Interaction.Contracts",
+    "references": [
+        "Common",
+        "Infrastructure.Contracts"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

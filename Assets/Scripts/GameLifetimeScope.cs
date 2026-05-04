@@ -9,13 +9,16 @@ using GameDesign4.Command.Contracts;
 using GameDesign4.Command.Runtime;
 using GameDesign4.Combat.Contracts.Service;
 using GameDesign4.Combat.Runtime;
+using GameDesign4.Deployment.Contracts;
+using GameDesign4.Deployment.Runtime;
 using GameDesign4.Infrastructure.Runtime.Debug;
 using GameDesign4.Infrastructure.Runtime.Logging;
 using GameDesign4.Infrastructure.Runtime.Pointer;
 using GameDesign4.Infrastructure.Contracts.Events;
 using GameDesign4.Input.Contracts;
 using GameDesign4.Input.Runtime;
-using GameDesign4.SceneInteract.Runtime;
+using GameDesign4.Interaction.Contracts;
+using GameDesign4.Interaction.Runtime;
 using GameDesign4.UI.Definitions;
 using GameDesign4.UI.Presentation;
 using GameDesign4.UI.Runtime;
@@ -82,10 +85,11 @@ namespace GameDesign4.GameFlow
                 .AsSelf()
                 .As<IUnitCombatRuleService>();
 
-            // 场景交互输入消费者：负责处理场景交互语义输入。
-            builder.Register<SceneInteractController>(Lifetime.Singleton)
+            // 交互输入消费者：负责根据当前模式分发场景交互语义输入。
+            builder.Register<InteractionModeController>(Lifetime.Singleton)
                 .AsSelf()
-                .As<ISceneInteractInputConsumer>();
+                .As<IInteractionInputConsumer>()
+                .As<IInteractionModeController>();
 
             // 相机控制运行依赖：直接注册场景节点与配置，避免无意义的上下文包装。
             builder.RegisterInstance(cameraTarget);
@@ -122,12 +126,15 @@ namespace GameDesign4.GameFlow
                 .AsSelf();
 
             // 建造运行时上下文：承载当前场景使用的建造目录资产。
-            if (buildCatalog == null)
+            BuildCatalogDef resolvedBuildCatalog = buildCatalog;
+            if (resolvedBuildCatalog == null)
             {
+                // XXX: 当前场景若未绑定 BuildCatalogDef，BuildPlacementService 会在读取蓝图目录时空引用，因此这里回退为空目录并输出中文警告。
+                resolvedBuildCatalog = ScriptableObject.CreateInstance<BuildCatalogDef>();
                 GameLog.Warning(GameLogModule.Build, "未绑定 BuildCatalogDef，建造面板将为空。");
             }
 
-            builder.RegisterInstance(buildCatalog);
+            builder.RegisterInstance(resolvedBuildCatalog);
 
             // 已建成生产建筑注册表：为生产系统提供当前可用产能数量。
             builder.Register<BuildingRegistry>(Lifetime.Singleton)
@@ -153,6 +160,11 @@ namespace GameDesign4.GameFlow
             builder.Register<InventoryService>(Lifetime.Singleton)
                 .AsSelf()
                 .As<IInventoryService>();
+
+            // 部署服务：负责进入部署模式、从最近部署建筑出生单位并下发移动命令。
+            builder.Register<DeploymentService>(Lifetime.Singleton)
+                .AsSelf()
+                .As<IDeploymentService>();
 
             // 生产服务：负责排产、等待队列、分配产能、推进计时与完成入库。
             builder.RegisterEntryPoint<ProductionService>()

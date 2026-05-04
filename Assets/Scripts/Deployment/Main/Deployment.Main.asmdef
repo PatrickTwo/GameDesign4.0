@@ -1,0 +1,27 @@
+{
+    "name": "Deployment.Main",
+    "rootNamespace": "GameDesign4.Deployment",
+    "references": [
+        "Deployment.Contracts",
+        "Build.Contracts",
+        "Command.Contracts",
+        "Inventory.Contracts",
+        "Unit.Contracts",
+        "Unit.Main",
+        "Common",
+        "UniTask",
+        "VContainer",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "Infrastructure.Contracts"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

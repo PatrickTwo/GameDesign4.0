@@ -6,7 +6,7 @@
 | --- | --- |
 | `GameInput` | 统一承载 Input System 输入定义 |
 | `InputController` | 持有输入资产并将底层输入转发为业务语义 |
-| `ISceneInteractInputConsumer` | 场景交互输入消费接口 |
+| `IInteractionInputConsumer` | 场景交互输入消费接口 |
 | `IUIInputConsumer` | UI 快捷键输入消费接口 |
 
 ## 2. 当前输入优先级
@@ -14,7 +14,7 @@
 ```text
 Global/Cancel
 -> IUIInputConsumer.HandleCancelAction
--> ISceneInteractInputConsumer.HandleCancelAction
+-> IInteractionInputConsumer.HandleCancelAction
 ```
 
 ## 3. 当前快捷键语义

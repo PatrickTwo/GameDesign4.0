@@ -1,3 +1,4 @@
+using GameDesign4.Build.Definition;
 using GameDesign4.Infrastructure.Utilities;
 
 namespace GameDesign4.Production.Runtime
@@ -13,19 +14,19 @@ namespace GameDesign4.Production.Runtime
         /// <summary>
         /// 构造生产建筑槽位。
         /// </summary>
-        public ProductionBuildingSlotState(string producerBuildingId, int slotIndex)
+        public ProductionBuildingSlotState(BuildingDef producerBuilding, int slotIndex)
         {
-            Guard.EnsureNotNullOrWhiteSpace(producerBuildingId, nameof(producerBuildingId));
+            Guard.EnsureNotNull(producerBuilding, nameof(producerBuilding));
             Guard.Ensure(slotIndex >= 0, "生产槽位索引不能小于 0。");
 
-            ProducerBuildingId = producerBuildingId;
+            ProducerBuilding = producerBuilding;
             SlotIndex = slotIndex;
         }
 
         /// <summary>
-        /// 指定生产建筑 Id。
+        /// 指定生产建筑定义。
         /// </summary>
-        public string ProducerBuildingId { get; }
+        public BuildingDef ProducerBuilding { get; }
 
         /// <summary>
         /// 槽位索引。
@@ -35,7 +36,7 @@ namespace GameDesign4.Production.Runtime
         /// <summary>
         /// 当前槽位唯一标识。
         /// </summary>
-        public string SlotId => ProducerBuildingId + "_" + SlotIndex;
+        public string SlotId => ProducerBuilding.Id + "_" + SlotIndex;
 
         /// <summary>
         /// 当前正在生产的任务。

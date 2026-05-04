@@ -1,7 +1,9 @@
 {
     "name": "Inventory.Contracts",
     "rootNamespace": "GameDesign4.Inventory.Contracts",
-    "references": [],
+    "references": [
+        "Common"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

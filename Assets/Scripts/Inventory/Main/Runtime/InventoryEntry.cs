@@ -1,30 +1,36 @@
+using GameDesign4.Infrastructure.Definitions;
+
 namespace GameDesign4.Inventory.Runtime
 {
     /// <summary>
     /// 仓库条目运行时状态。
-    /// 负责保存单种物品的显示名与库存数量。
+    /// 负责保存单种物品的定义引用与库存数量。
     /// </summary>
     public sealed class InventoryEntry
     {
         /// <summary>
         /// 构造仓库条目状态。
         /// </summary>
-        public InventoryEntry(string itemId, string displayName, int amount)
+        public InventoryEntry(EntityDef definition, int amount)
         {
-            ItemId = itemId;
-            DisplayName = displayName;
+            Definition = definition;
             Amount = amount;
         }
 
         /// <summary>
+        /// 物品定义。
+        /// </summary>
+        public EntityDef Definition { get; }
+
+        /// <summary>
         /// 物品唯一标识。
         /// </summary>
-        public string ItemId { get; }
+        public string ItemId => Definition == null ? string.Empty : Definition.Id;
 
         /// <summary>
         /// 物品显示名称。
         /// </summary>
-        public string DisplayName { get; }
+        public string DisplayName => Definition == null ? string.Empty : Definition.DisplayName;
 
         /// <summary>
         /// 当前库存数量。
@@ -38,6 +44,14 @@ namespace GameDesign4.Inventory.Runtime
         public void AddAmount(int amount)
         {
             Amount += amount;
+        }
+
+        /// <summary>
+        /// 扣减库存数量。
+        /// </summary>
+        public void RemoveAmount(int amount)
+        {
+            Amount -= amount;
         }
         #endregion
     }

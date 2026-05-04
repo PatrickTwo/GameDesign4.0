@@ -6,7 +6,7 @@
 
 | 接口 | 说明 |
 | --- | --- |
-| `IBuildPlacementService.StartPlacement` | 基于蓝图标识进入建造模式 |
+| `IBuildPlacementService.StartPlacement` | 基于蓝图标识初始化一次建造放置 |
 | `IBuildPlacementService.HandlePrimaryAction` | 处理建造模式下的左键放置 |
 | `IBuildPlacementService.HandleSecondaryAction` | 处理建造模式下的右键取消 |
 | `IBuildPlacementService.HandleCancelAction` | 处理建造模式下的取消输入 |
@@ -45,12 +45,15 @@
 ```mermaid
 flowchart TD
     A["BuildPanelController 读取 BuildPlacementService.GetAvailableBlueprints"] --> B["BuildPanelController 点击蓝图"]
-    B --> C["IBuildPlacementService.StartPlacement"]
+    B --> B1["IInteractionModeController.EnterBuildMode"]
+    B1 --> C["IBuildPlacementService.StartPlacement"]
     C --> D["BuildPlacementService 异步加载预览"]
     E["BuildPlacementService.Tick"] --> F["Build 内部刷新预览位置"]
     F --> D
-    G["SceneInteract 左键/右键/取消"] --> H["IBuildPlacementService.HandlePrimaryAction / HandleSecondaryAction / HandleCancelAction"]
-    H --> I["实例化正式建筑或释放预览"]
+    G["交互输入 左键/右键/取消"] --> H["IBuildPlacementService.HandlePrimaryAction / HandleSecondaryAction / HandleCancelAction"]
+    H --> H1["返回 InputHandleResult"]
+    H1 --> I["InteractionModeController 决定是否退出模式"]
+    I --> J["实例化正式建筑或释放预览"]
 ```
 
 ## 3. 当前实现备注

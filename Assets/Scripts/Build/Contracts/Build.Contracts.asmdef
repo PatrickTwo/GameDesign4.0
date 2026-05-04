@@ -1,7 +1,9 @@
 {
     "name": "Build.Contracts",
     "rootNamespace": "GameDesign4.Build.Contracts",
-    "references": [],
+    "references": [
+        "Common"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
