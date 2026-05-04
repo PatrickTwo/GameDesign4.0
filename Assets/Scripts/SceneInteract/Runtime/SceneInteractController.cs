@@ -23,9 +23,12 @@ namespace GameDesign4.SceneInteract.Runtime
         /// <summary>
         /// 构造场景交互主控制器。
         /// </summary>
-        public SceneInteractController(ICommandBus commandBus, IBuildPlacementService buildPlacementService)
+        public SceneInteractController(
+            ICommandBus commandBus,
+            IBuildPlacementService buildPlacementService,
+            PointerContextService pointerContextService)
         {
-            pointerContextService = new PointerContextService();
+            this.pointerContextService = pointerContextService;
             selectionService = new SceneSelectionService();
             commandService = new SceneCommandService(commandBus, buildPlacementService, selectionService);
         }

@@ -8,11 +8,6 @@ namespace GameDesign4.Grid.Contracts.Service
     /// </summary>
     public interface IGridControlService
     {
-        /// <summary>
-        /// 获取当前网格显示状态。
-        /// </summary>
-        GridState GridState { get; }
-
         #region 显示控制
 
         /// <summary>

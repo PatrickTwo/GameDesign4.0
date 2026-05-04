@@ -14,6 +14,12 @@ namespace GameDesign4.Grid.Presentation
     /// </summary>
     public sealed class GridView : MonoBehaviour
     {
+        private static readonly int GridWidthShaderId = Shader.PropertyToID("_GridWidth");
+        private static readonly int GridHeightShaderId = Shader.PropertyToID("_GridHeight");
+        private static readonly int GridLineThicknessShaderId = Shader.PropertyToID("_GridLineThickness");
+        private static readonly int GridLineColorShaderId = Shader.PropertyToID("_GridLineColor");
+        private static readonly int GridFillColorShaderId = Shader.PropertyToID("_GridFillColor");
+
         [Header("网格显示根节点")]
         [SerializeField] private GameObject gridRoot;
         [Header("网格定义")]
@@ -22,7 +28,7 @@ namespace GameDesign4.Grid.Presentation
         [SerializeField] private Transform gridSurfaceQuad;
         [Header("占用显示容器")]
         [SerializeField] private Transform occupiedHighlightContainer;
-        [Header("材质引用")]
+        [Header("悬停与预览")]
         [SerializeField] private GameObject hoverQuad;
         [SerializeField] private GameObject validPreviewQuad;
         [SerializeField] private GameObject invalidPreviewQuad;
@@ -31,12 +37,12 @@ namespace GameDesign4.Grid.Presentation
 
         private GridState gridState;
         // 占用标记实例池
-        private readonly List<GameObject> occupiedInstances = new();
+        private readonly List<GameObject> occupiedInstances = new List<GameObject>();
 
         [Inject]
-        private void Construct(GridController gridController)
+        private void Construct(GridState gridState)
         {
-            gridState = gridController.GridState;
+            this.gridState = gridState;
         }
 
         #region 生命周期
@@ -46,6 +52,7 @@ namespace GameDesign4.Grid.Presentation
             Vector3 center = GridViewUtility.GetGridCenter(gridDefinition, gridDefinition.LineYOffset);
             Vector2 size = GridViewUtility.GetGridSize(gridDefinition);
             GridViewUtility.SetQuadTransform(gridSurfaceQuad, center, size);
+            ConfigureGridSurfaceMaterial();
 
             hoverQuad.SetActive(false);
             validPreviewQuad.SetActive(false);
@@ -76,7 +83,28 @@ namespace GameDesign4.Grid.Presentation
         #endregion
 
         #region 轮询刷新
+        /// <summary>
+        /// 初始化底面网格线材质。
+        /// </summary>
+        private void ConfigureGridSurfaceMaterial()
+        {
+            MeshRenderer gridSurfaceRenderer = gridSurfaceQuad.GetComponent<MeshRenderer>();
+            Material gridSurfaceMaterial = gridSurfaceRenderer.sharedMaterial;
+            ApplyGridSurfaceMaterialProperties(gridSurfaceMaterial);
+        }
 
+        /// <summary>
+        /// 将网格定义参数写入底面材质。
+        /// </summary>
+        private void ApplyGridSurfaceMaterialProperties(Material targetMaterial)
+        {
+            // 使用逻辑网格尺寸和显示参数驱动整张底面上的网格线绘制。
+            targetMaterial.SetFloat(GridWidthShaderId, gridDefinition.GridWidth);
+            targetMaterial.SetFloat(GridHeightShaderId, gridDefinition.GridHeight);
+            targetMaterial.SetFloat(GridLineThicknessShaderId, gridDefinition.LineThickness);
+            targetMaterial.SetColor(GridLineColorShaderId, gridDefinition.LineColor);
+            targetMaterial.SetColor(GridFillColorShaderId, gridDefinition.FillColor);
+        }
 
         /// <summary>
         /// 刷新悬停高亮。
@@ -127,7 +155,7 @@ namespace GameDesign4.Grid.Presentation
         /// <summary>
         /// 响应占用标记变更，重建占用高亮实例。
         /// </summary>
-        private void HandleOccupiedChanged(List<GridFootprint> footprints)
+        private void HandleOccupiedChanged(IReadOnlyList<GridFootprint> footprints)
         {
             // HACK 后续可考虑只处理变更的占用标记，而不是全部重建。
             // 销毁旧实例。

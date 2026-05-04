@@ -1,4 +1,5 @@
 using GameDesign4.Build.Definition;
+using GameDesign4.Grid.Contracts.Model;
 using UnityEngine;
 
 namespace GameDesign4.Build.Runtime
@@ -35,6 +36,21 @@ namespace GameDesign4.Build.Runtime
         public bool HasPreviewPosition { get; private set; }
 
         /// <summary>
+        /// 当前吸附到的格坐标。
+        /// </summary>
+        public GridCoord? PreviewCoord { get; private set; }
+
+        /// <summary>
+        /// 当前预览占地。
+        /// </summary>
+        public GridFootprint? PreviewFootprint { get; private set; }
+
+        /// <summary>
+        /// 当前预览是否有效。
+        /// </summary>
+        public bool IsPreviewValid { get; private set; }
+
+        /// <summary>
         /// 当前放置会话版本号。
         /// 用于防止异步加载完成后把旧预览挂回新状态。
         /// </summary>
@@ -51,6 +67,9 @@ namespace GameDesign4.Build.Runtime
             PreviewInstance = null;
             PreviewPosition = Vector3.zero;
             HasPreviewPosition = false;
+            PreviewCoord = null;
+            PreviewFootprint = null;
+            IsPreviewValid = false;
         }
 
         /// <summary>
@@ -68,6 +87,16 @@ namespace GameDesign4.Build.Runtime
         {
             PreviewPosition = previewPosition;
             HasPreviewPosition = hasPreviewPosition;
+        }
+
+        /// <summary>
+        /// 更新当前网格预览状态。
+        /// </summary>
+        public void UpdateGridPreviewState(GridCoord? previewCoord, GridFootprint? previewFootprint, bool isPreviewValid)
+        {
+            PreviewCoord = previewCoord;
+            PreviewFootprint = previewFootprint;
+            IsPreviewValid = isPreviewValid;
         }
 
         /// <summary>
@@ -89,6 +118,9 @@ namespace GameDesign4.Build.Runtime
             PreviewInstance = null;
             PreviewPosition = Vector3.zero;
             HasPreviewPosition = false;
+            PreviewCoord = null;
+            PreviewFootprint = null;
+            IsPreviewValid = false;
         }
         #endregion
     }

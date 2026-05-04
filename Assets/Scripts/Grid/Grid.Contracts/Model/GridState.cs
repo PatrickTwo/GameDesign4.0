@@ -20,9 +20,9 @@ namespace GameDesign4.Grid.Contracts.Model
         private GridFootprint? previewFootprint;
         // 预览占用区域是否有效
         private bool isPreviewValid;
-        private List<GridFootprint> occupiedFootprints = new();
+        private readonly List<GridFootprint> occupiedFootprints = new List<GridFootprint>();
         // 已占用标记集合变更事件，用于通知视图更新。
-        public event Action<List<GridFootprint>> OnOccupiedChanged;
+        public event Action<IReadOnlyList<GridFootprint>> OnOccupiedChanged;
 
 
         #region 对外属性
@@ -30,6 +30,11 @@ namespace GameDesign4.Grid.Contracts.Model
         public GridCoord? HoverCoord => hoverCoord;
         public GridFootprint? PreviewFootprint => previewFootprint;
         public bool IsPreviewValid => isPreviewValid;
+
+        /// <summary>
+        /// 当前全部已占用占地。
+        /// </summary>
+        public IReadOnlyList<GridFootprint> OccupiedFootprints => occupiedFootprints;
         #endregion
 
         #region 方法接口
@@ -83,6 +88,15 @@ namespace GameDesign4.Grid.Contracts.Model
         public void RemoveFootprint(GridFootprint footprint)
         {
             occupiedFootprints.Remove(footprint);
+            OnOccupiedChanged?.Invoke(occupiedFootprints);
+        }
+
+        /// <summary>
+        /// 清空全部已占用占地。
+        /// </summary>
+        public void ClearOccupiedFootprints()
+        {
+            occupiedFootprints.Clear();
             OnOccupiedChanged?.Invoke(occupiedFootprints);
         }
         #endregion

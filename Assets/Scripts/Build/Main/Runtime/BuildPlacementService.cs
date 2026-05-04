@@ -3,6 +3,8 @@ using Cysharp.Threading.Tasks;
 using GameDesign4.Build.Contracts;
 using GameDesign4.Build.Definition;
 using GameDesign4.Build.Presentation;
+using GameDesign4.Grid.Contracts.Model;
+using GameDesign4.Grid.Contracts.Service;
 using GameDesign4.Infrastructure.Runtime.Logging;
 using GameDesign4.Infrastructure.Runtime.Pointer;
 using GameDesign4.Infrastructure.Utilities;
@@ -20,6 +22,8 @@ namespace GameDesign4.Build.Runtime
     /// </summary>
     public sealed class BuildPlacementService : IBuildPlacementService, ITickable
     {
+        private readonly IGridControlService gridControlService;
+        private readonly IGridQueryService gridQueryService;
         private readonly IObjectResolver objectResolver;
         private readonly PointerContextService pointerContextService;
         private readonly BuildPlacementValidator validator;
@@ -30,11 +34,18 @@ namespace GameDesign4.Build.Runtime
         /// <summary>
         /// 构造建造放置服务。
         /// </summary>
-        public BuildPlacementService(BuildCatalogDef buildCatalog, IObjectResolver objectResolver)
+        public BuildPlacementService(
+            BuildCatalogDef buildCatalog,
+            IObjectResolver objectResolver,
+            IGridControlService gridControlService,
+            IGridQueryService gridQueryService,
+            PointerContextService pointerContextService)
         {
+            this.gridControlService = gridControlService;
+            this.gridQueryService = gridQueryService;
             this.objectResolver = objectResolver;
-            pointerContextService = new PointerContextService();
-            validator = new BuildPlacementValidator();
+            this.pointerContextService = pointerContextService;
+            validator = new BuildPlacementValidator(gridQueryService);
             state = new BuildPlacementState();
             availableBlueprints = new List<BuildingBlueprintDef>();
             blueprintLookup = new Dictionary<string, BuildingBlueprintDef>();
@@ -103,6 +114,9 @@ namespace GameDesign4.Build.Runtime
 
             ReleasePreviewInstance();
             state.BeginPlacement(blueprint);
+            gridControlService.ShowGrid();
+            gridControlService.SetHoverCoord(null);
+            gridControlService.ClearPreviewFootprint();
             LoadPreviewAsync(blueprint, state.PlacementVersion).Forget();
             GameLog.Log(GameLogModule.Build, $"进入建造模式：{blueprint.DisplayName}");
         }
@@ -126,12 +140,15 @@ namespace GameDesign4.Build.Runtime
             }
 
             BuildingBlueprintDef blueprint = state.CurrentBlueprint;
-            if (validator.CanPlace(blueprint, worldPosition) == false)
+            GridFootprint? previewFootprint = state.PreviewFootprint;
+            if (previewFootprint.HasValue == false || validator.CanPlace(blueprint, previewFootprint.Value) == false)
             {
                 return true;
             }
 
-            InstantiatePlacedBuildingAsync(blueprint, worldPosition).Forget();
+            Vector3 placementWorldPosition = state.PreviewPosition;
+            gridQueryService.OccupyFootprint(previewFootprint.Value);
+            InstantiatePlacedBuildingAsync(blueprint, placementWorldPosition, previewFootprint.Value).Forget();
 
             // 当前版本一次点击完成一次建造，放置成功后直接退出建造模式。
             CancelPlacementInternal();
@@ -193,6 +210,9 @@ namespace GameDesign4.Build.Runtime
                 GameLog.Warning(GameLogModule.Build, $"建造预览实例化失败：{blueprint.DisplayName}");
                 return;
             }
+            
+            // 预览实例刚创建时默认是激活状态，先隐藏，避免在鼠标仍停留 UI 时于原点闪现一帧。
+            previewInstance.SetActive(false);
 
             if (state.IsPlacementActive == false || state.PlacementVersion != placementVersion || state.CurrentBlueprint != blueprint)
             {
@@ -217,11 +237,13 @@ namespace GameDesign4.Build.Runtime
         /// <summary>
         /// 异步实例化正式建筑。
         /// </summary>
-        private async UniTaskVoid InstantiatePlacedBuildingAsync(BuildingBlueprintDef blueprint, Vector3 worldPosition)
+        private async UniTaskVoid InstantiatePlacedBuildingAsync(BuildingBlueprintDef blueprint, Vector3 worldPosition, GridFootprint footprint)
         {
             BuildingDef building = blueprint.Building;
             if (building == null || building.PrefabReference == null || building.PrefabReference.RuntimeKeyIsValid() == false)
             {
+                // 预占格后如果发现资源无效，需要立即回滚，避免留下假占用。
+                gridQueryService.ReleaseFootprint(footprint);
                 GameLog.Warning(GameLogModule.Build, $"正式建筑实例化失败，蓝图缺少有效预制体：{blueprint.DisplayName}");
                 return;
             }
@@ -233,6 +255,8 @@ namespace GameDesign4.Build.Runtime
             GameObject buildingInstance = buildHandle.Result;
             if (buildingInstance == null)
             {
+                // 异步实例化失败时，同样回滚本次占格。
+                gridQueryService.ReleaseFootprint(footprint);
                 GameLog.Warning(GameLogModule.Build, $"正式建筑实例化失败：{blueprint.DisplayName}");
                 return;
             }
@@ -248,8 +272,39 @@ namespace GameDesign4.Build.Runtime
         /// </summary>
         private void ApplyPointerContext(Vector3 worldPosition, bool hasGroundHit, bool isOverUi)
         {
-            bool hasPreviewPosition = hasGroundHit && isOverUi == false;
-            state.UpdatePreviewState(worldPosition, hasPreviewPosition);
+            if (hasGroundHit == false || isOverUi)
+            {
+                // 当前没有有效地面命中或鼠标在 UI 上时，直接清除网格预览。
+                state.UpdatePreviewState(Vector3.zero, false);
+                state.UpdateGridPreviewState(null, null, false);
+                gridControlService.SetHoverCoord(null);
+                gridControlService.ClearPreviewFootprint();
+                ApplyPreviewState();
+                return;
+            }
+
+            bool hasGridCoord = gridQueryService.TryWorldToCoord(worldPosition, out GridCoord gridCoord);
+            if (hasGridCoord == false)
+            {
+                // 命中地面但不在网格范围内时，同样不显示建筑预览。
+                state.UpdatePreviewState(Vector3.zero, false);
+                state.UpdateGridPreviewState(null, null, false);
+                gridControlService.SetHoverCoord(null);
+                gridControlService.ClearPreviewFootprint();
+                ApplyPreviewState();
+                return;
+            }
+
+            BuildingBlueprintDef blueprint = state.CurrentBlueprint;
+            GridFootprint footprint = CreateFootprint(blueprint, gridCoord);
+            bool isPreviewValid = validator.CanPlace(blueprint, footprint);
+            Vector3 previewWorldPosition = gridQueryService.GetFootprintWorldCenter(footprint, worldPosition.y);
+
+            // 将吸附后的世界位置与占地状态同时缓存下来，供预览与最终落地共用。
+            state.UpdatePreviewState(previewWorldPosition, true);
+            state.UpdateGridPreviewState(gridCoord, footprint, isPreviewValid);
+            gridControlService.SetHoverCoord(gridCoord);
+            gridControlService.SetPreviewFootprint(footprint, isPreviewValid);
             ApplyPreviewState();
         }
 
@@ -277,6 +332,7 @@ namespace GameDesign4.Build.Runtime
         private void CancelPlacementInternal()
         {
             ReleasePreviewInstance();
+            gridControlService.HideGrid();
             state.Clear();
         }
 
@@ -290,6 +346,15 @@ namespace GameDesign4.Build.Runtime
             {
                 Addressables.ReleaseInstance(previewInstance);
             }
+        }
+
+        /// <summary>
+        /// 基于当前悬停格和建筑占地生成矩形占地。
+        /// </summary>
+        private static GridFootprint CreateFootprint(BuildingBlueprintDef blueprint, GridCoord anchorCoord)
+        {
+            // 当前版本固定使用建筑定义中的矩形尺寸，不支持旋转。
+            return new GridFootprint(anchorCoord, blueprint.Building.FootprintSize);
         }
         #endregion
     }

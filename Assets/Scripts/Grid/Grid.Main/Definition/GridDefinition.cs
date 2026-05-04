@@ -21,6 +21,11 @@ namespace GameDesign4.Grid.Definition
         [SerializeField] private float lineYOffset = 0.05f;
         [SerializeField] private float quadYOffset = 0.06f;
         
+        [Header("网格线显示")]
+        [SerializeField] private Color lineColor = new Color(0.0f, 0.82f, 1.0f, 0.65f);
+        [SerializeField] private Color fillColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        [SerializeField] private float lineThickness = 0.02f;
+
         [Header("显示缩放")]
         [SerializeField] private Vector2 hoverQuadScale = new Vector2(0.92f, 0.92f);
         [SerializeField] private Vector2 footprintQuadScale = new Vector2(0.92f, 0.92f);
@@ -57,6 +62,21 @@ namespace GameDesign4.Grid.Definition
         public float QuadYOffset => quadYOffset;
 
         /// <summary>
+        /// 网格线颜色。
+        /// </summary>
+        public Color LineColor => lineColor;
+
+        /// <summary>
+        /// 网格底面填充色。
+        /// </summary>
+        public Color FillColor => fillColor;
+
+        /// <summary>
+        /// 网格线宽度。
+        /// </summary>
+        public float LineThickness => lineThickness;
+
+        /// <summary>
         /// 悬停格缩放。
         /// </summary>
         public Vector2 HoverQuadScale => hoverQuadScale;
@@ -89,6 +109,12 @@ namespace GameDesign4.Grid.Definition
             if (cellSize <= 0f)
             {
                 issues.Add($"网格单格尺寸必须大于 0：{name}");
+            }
+
+            // 网格线宽度必须大于零，否则不会产生可见线条。
+            if (lineThickness <= 0f)
+            {
+                issues.Add($"网格线宽度必须大于 0：{name}");
             }
         }
         #endregion

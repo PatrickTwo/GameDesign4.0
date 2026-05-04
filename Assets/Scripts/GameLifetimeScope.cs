@@ -22,7 +22,9 @@ using VContainer;
 using VContainer.Unity;
 using GameDesign4.Grid.Presentation;
 using GameDesign4.Grid.Contracts.Service;
+using GameDesign4.Grid.Contracts.Model;
 using GameDesign4.Grid.Runtime;
+using GameDesign4.Grid.Definition;
 
 namespace GameDesign4.GameFlow
 {
@@ -41,12 +43,19 @@ namespace GameDesign4.GameFlow
         [SerializeField] private Transform cameraTarget;
         [SerializeField] private CinemachineVirtualCamera virtualCamera;
         [SerializeField] private CameraControlSettings cameraControlSettings;
+        [Header("网格配置")]
+        [SerializeField] private GridDefinition gridDefinition;
 
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.Register<PointerContextService>(Lifetime.Singleton)
+                .AsSelf();
+
             // 网格系统
-            builder.Register<GridController>(Lifetime.Singleton).As<IGridControlService>();
+            builder.RegisterInstance(new GridState());
+            builder.RegisterInstance(gridDefinition);
+            builder.Register<GridController>(Lifetime.Singleton).AsSelf().As<IGridControlService>();
             builder.Register<GridQueryService>(Lifetime.Singleton).As<IGridQueryService>();
 
             // XXX 这里的EventSystem因与Infrastructure.Runtime.Events.EventSystem名称冲突，已经产生过bug，因此这里用显示命名空间，防止再次混淆

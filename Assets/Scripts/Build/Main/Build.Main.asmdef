@@ -3,6 +3,7 @@
     "rootNamespace": "GameDesign4.Build",
     "references": [
         "Build.Contracts",
+        "Grid.Contracts",
         "Common",
         "UI",
         "UniTask",

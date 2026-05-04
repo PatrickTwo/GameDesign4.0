@@ -9,8 +9,15 @@ namespace GameDesign4.Grid.Presentation
     /// </summary>
     public sealed class GridController : IGridControlService
     {
-        private readonly GridState gridState = new();
-        public GridState GridState => gridState;
+        private readonly GridState gridState;
+
+        /// <summary>
+        /// 构造网格显示控制器。
+        /// </summary>
+        public GridController(GridState gridState)
+        {
+            this.gridState = gridState;
+        }
 
         #region IGridControlService
 

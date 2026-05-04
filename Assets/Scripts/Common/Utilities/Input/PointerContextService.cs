@@ -69,9 +69,9 @@ namespace GameDesign4.Infrastructure.Runtime.Pointer
         /// <summary>
         /// 构造指针上下文调试输出。
         /// </summary>
-        public PointerContextDebugOutput()
+        public PointerContextDebugOutput(PointerContextService pointerContextService)
         {
-            pointerContextService = new PointerContextService();
+            this.pointerContextService = pointerContextService;
         }
 
         /// <summary>

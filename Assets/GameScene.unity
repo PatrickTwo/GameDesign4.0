@@ -132,7 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 95830674}
   m_Layer: 0
-  m_Name: OccupiedHighlightRoot
+  m_Name: OccupiedHighlightContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -665,6 +665,7 @@ MonoBehaviour:
   - {fileID: 1865153653}
   - {fileID: 643918292}
   - {fileID: 1259801652}
+  - {fileID: 753089211}
   uiPanelCatalog: {fileID: 11400000, guid: 1f3b5f9f2d6c4c1a8e7b0d3f5a9c1e21, type: 2}
   buildCatalog: {fileID: 11400000, guid: 8a0c3e5f1b4d6a2c0e3f4a5b6c7d8e05, type: 2}
   uiRoot: {fileID: 684628525}
@@ -672,6 +673,7 @@ MonoBehaviour:
   virtualCamera: {fileID: 571531464}
   cameraControlSettings: {fileID: 11400000, guid: 93fa712bf974c384395234e95cef57af,
     type: 2}
+  gridDefinition: {fileID: 11400000, guid: 12dd21d687e231448bda4d72863d3618, type: 2}
 --- !u!1 &571531462
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,6 +957,60 @@ MonoBehaviour:
   normalLayer: {fileID: 468615401}
   popupLayer: {fileID: 957491567}
   overlayLayer: {fileID: 1330112358}
+--- !u!1 &753089211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 753089212}
+  - component: {fileID: 753089213}
+  m_Layer: 0
+  m_Name: GridView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &753089212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753089211}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2145431170}
+  m_Father: {fileID: 1138780615}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &753089213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753089211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ae00524272f40a3ab033fcbf6d42516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridRoot: {fileID: 2145431169}
+  gridDefinition: {fileID: 11400000, guid: 12dd21d687e231448bda4d72863d3618, type: 2}
+  gridSurfaceQuad: {fileID: 576208173}
+  occupiedHighlightContainer: {fileID: 95830674}
+  hoverQuad: {fileID: 1160429145}
+  validPreviewQuad: {fileID: 968067225}
+  invalidPreviewQuad: {fileID: 1335525668}
+  quadPrefab: {fileID: 5099272554572514563, guid: 62100f40f9fafb74faf016a4adc8daa7,
+    type: 3}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,7 +1231,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 684628521}
-  - {fileID: 2145431170}
+  - {fileID: 753089212}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1160429145
@@ -1952,7 +2008,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2145431170}
-  - component: {fileID: 2145431171}
   m_Layer: 0
   m_Name: GridRoot
   m_TagString: Untagged
@@ -1977,28 +2032,8 @@ Transform:
   - {fileID: 1160429146}
   - {fileID: 327816919}
   - {fileID: 95830674}
-  m_Father: {fileID: 1138780615}
+  m_Father: {fileID: 753089212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2145431171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2145431169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ae00524272f40a3ab033fcbf6d42516, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridDefinition: {fileID: 11400000, guid: 12dd21d687e231448bda4d72863d3618, type: 2}
-  gridSurfaceQuad: {fileID: 576208173}
-  hoverHighlightQuad: {fileID: 1160429146}
-  validPreviewQuad: {fileID: 968067226}
-  invalidPreviewQuad: {fileID: 1335525669}
-  occupiedHighlightPrefab: {fileID: 5099272554572514563, guid: 62100f40f9fafb74faf016a4adc8daa7,
-    type: 3}
-  occupiedHighlightRoot: {fileID: 95830674}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
