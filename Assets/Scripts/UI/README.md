@@ -6,11 +6,11 @@
 
 | 接口 | 说明 |
 | --- | --- |
-| `IUiPanelService.IsPanelOpen` | 提供面板打开状态查询 |
-| `IUiPanelService.OpenPanel` | 提供面板打开入口 |
-| `IUiPanelService.ClosePanel` | 提供面板关闭入口 |
-| `IUiPanelService.CloseLastOpenedPanel` | 提供按最近打开顺序关闭面板的入口 |
-| `IUiPanelService.TogglePanel` | 提供面板显隐切换入口 |
+| `IUIController.IsPanelOpen` | 提供面板打开状态查询 |
+| `IUIController.OpenPanel` | 提供面板打开入口 |
+| `IUIController.ClosePanel` | 提供面板关闭入口 |
+| `IUIController.CloseLastOpenedPanel` | 提供按最近打开顺序关闭面板的入口 |
+| `IUIController.TogglePanel` | 提供面板显隐切换入口 |
 
 ### 外部模块依赖
 
@@ -29,6 +29,7 @@
 | `UiPanelEntryDef.AddressKey` | 读取面板 Addressable 地址键 |
 | `UiPanelEntryDef.Layer` | 读取面板挂载层级 |
 | `UiPanelEntryDef.OpenOnStartup` | 读取面板是否启动默认打开 |
+| `UiPanelEntryDef.CloseByCancel` | 读取面板是否参与取消关闭顺序 |
 | `UiPanelEntryDef.ExclusivePanelIds` | 读取面板互斥配置 |
 
 #### `UI.Presentation`
@@ -65,11 +66,13 @@
 ```mermaid
 flowchart TD
     A["GameFlow 注入 UiPanelCatalogDef / UIRoot"] --> B["UIService"]
-    B --> C["Addressables.InstantiateAsync 加载 BasePanel"]
-    C --> D["IObjectResolver.InjectGameObject 注入依赖"]
-    D --> E["缓存面板并暴露 IUiPanelService"]
-    F["外部模块调用 IUiPanelService"] --> E
-    E --> G["BasePanel.Open / Close / Toggle"]
+    A --> C["UIController"]
+    B --> D["Addressables.InstantiateAsync 加载 BasePanel"]
+    D --> E["IObjectResolver.InjectGameObject 注入依赖"]
+    E --> F["缓存面板并提供基础开关"]
+    C --> G["维护快捷键 / 顺序关闭 / 互斥策略"]
+    G --> F
+    H["外部模块调用 IUIController"] --> G
 ```
 
 ## 3. 当前实现备注
@@ -78,4 +81,5 @@ flowchart TD
 | --- | --- |
 | 当前风险 | 装配层对 UI 仍是硬依赖；UI 面板初始化仍是异步 fire-and-forget |
 | 当前限制 | 当前层级节点依赖场景中的 `UIRoot` 组件显式绑定 |
-| 后续建议 | 先补 `NullUiPanelService` 与条件注册，再补 UI 模块测试，并补一个初始化完成信号 |
+| 当前结论 | `UIController` 负责快捷键、互斥、打开顺序与取消关闭，`UIService` 只负责底层加载与基础开关 |
+| 后续建议 | 先补初始化完成信号，再补 UI 模块测试与可重绑定配置持久化 |

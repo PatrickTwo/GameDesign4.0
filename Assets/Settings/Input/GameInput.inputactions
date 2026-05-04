@@ -31,15 +31,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Cancel",
-                    "type": "Button",
-                    "id": "10fe7ce8-90d8-4785-b4d4-85c29b74c5fd",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -75,14 +66,99 @@
                     "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "7fc391dd-2601-4fa1-9a97-dd95ef8dc7b2",
+            "actions": [
+                {
+                    "name": "ToggleBuildPanel",
+                    "type": "Button",
+                    "id": "1e00c3bc-ec91-4c73-8de7-0c0390d261af",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
+                    "name": "ToggleProductionPanel",
+                    "type": "Button",
+                    "id": "d4bb7d20-39dc-42b8-9c2c-86b53f2b3349",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleInventoryPanel",
+                    "type": "Button",
+                    "id": "a8d90970-7059-4f7f-9eaf-24575bd24035",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
                     "name": "",
-                    "id": "61019f4a-e550-4dd8-b15f-7cf00cb42190",
-                    "path": "<Keyboard>/escape",
+                    "id": "6e0cb0f5-6dba-4757-a702-59203ad0f810",
+                    "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "ToggleBuildPanel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4f67f531-c935-48bb-a737-f1bf6fe485f7",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ToggleInventoryPanel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6cb9935c-2d2c-41af-9144-dbba07dc4353",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ToggleProductionPanel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Global",
+            "id": "90152d4c-d699-415f-81b6-a1ed00182f53",
+            "actions": [
+                {
+                    "name": "Cancel",
+                    "type": "Button",
+                    "id": "8c953528-5abc-4d0a-84ab-113ac39298f6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7e8a370e-7e4a-45f4-bbeb-01e8a497e0fa",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false

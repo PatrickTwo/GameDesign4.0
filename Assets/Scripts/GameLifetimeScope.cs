@@ -13,6 +13,8 @@ using GameDesign4.Infrastructure.Runtime.Debug;
 using GameDesign4.Infrastructure.Runtime.Logging;
 using GameDesign4.Infrastructure.Runtime.Pointer;
 using GameDesign4.Infrastructure.Contracts.Events;
+using GameDesign4.Input.Contracts;
+using GameDesign4.Input.Runtime;
 using GameDesign4.SceneInteract.Runtime;
 using GameDesign4.UI.Definitions;
 using GameDesign4.UI.Presentation;
@@ -80,9 +82,10 @@ namespace GameDesign4.GameFlow
                 .AsSelf()
                 .As<IUnitCombatRuleService>();
 
-
-            // 场景交互控制器：由容器驱动输入生命周期并派发场景交互命令。
-            builder.RegisterEntryPoint<SceneInteractController>();
+            // 场景交互输入消费者：负责处理场景交互语义输入。
+            builder.Register<SceneInteractController>(Lifetime.Singleton)
+                .AsSelf()
+                .As<ISceneInteractInputConsumer>();
 
             // 相机控制运行依赖：直接注册场景节点与配置，避免无意义的上下文包装。
             builder.RegisterInstance(cameraTarget);
@@ -109,6 +112,14 @@ namespace GameDesign4.GameFlow
             }
 
             builder.RegisterInstance(resolvedUiPanelCatalog);
+            builder.Register<UIService>(Lifetime.Singleton)
+                .AsSelf();
+            builder.Register<UIController>(Lifetime.Singleton)
+                .AsSelf()
+                .As<IUIController>()
+                .As<IUIInputConsumer>();
+            builder.RegisterEntryPoint<InputController>()
+                .AsSelf();
 
             // 建造运行时上下文：承载当前场景使用的建造目录资产。
             if (buildCatalog == null)
@@ -147,9 +158,6 @@ namespace GameDesign4.GameFlow
             builder.RegisterEntryPoint<ProductionService>()
                 .AsSelf()
                 .As<IProductionService>();
-
-            // UI 服务：根据目录配置加载并缓存全部面板。
-            builder.RegisterEntryPoint<UIService>(Lifetime.Singleton);
         }
     }
 }

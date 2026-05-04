@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace GameDesign4.SceneInteract.Presentation.Input.Generated
+namespace GameDesign4.Input.Generated
 {
     /// <summary>
     /// Provides programmatic access to <see cref="InputActionAsset" />, <see cref="InputActionMap" />, <see cref="InputAction" /> and <see cref="InputControlScheme" /> instances defined in asset "Assets/Settings/Input/GameInput.inputactions".
@@ -119,15 +119,6 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Cancel"",
-                    ""type"": ""Button"",
-                    ""id"": ""10fe7ce8-90d8-4785-b4d4-85c29b74c5fd"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -163,14 +154,99 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
                     ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""7fc391dd-2601-4fa1-9a97-dd95ef8dc7b2"",
+            ""actions"": [
+                {
+                    ""name"": ""ToggleBuildPanel"",
+                    ""type"": ""Button"",
+                    ""id"": ""1e00c3bc-ec91-4c73-8de7-0c0390d261af"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ToggleProductionPanel"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4bb7d20-39dc-42b8-9c2c-86b53f2b3349"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleInventoryPanel"",
+                    ""type"": ""Button"",
+                    ""id"": ""a8d90970-7059-4f7f-9eaf-24575bd24035"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
                     ""name"": """",
-                    ""id"": ""61019f4a-e550-4dd8-b15f-7cf00cb42190"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""id"": ""6e0cb0f5-6dba-4757-a702-59203ad0f810"",
+                    ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ToggleBuildPanel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f67f531-c935-48bb-a737-f1bf6fe485f7"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ToggleInventoryPanel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6cb9935c-2d2c-41af-9144-dbba07dc4353"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ToggleProductionPanel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Global"",
+            ""id"": ""90152d4c-d699-415f-81b6-a1ed00182f53"",
+            ""actions"": [
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""8c953528-5abc-4d0a-84ab-113ac39298f6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""7e8a370e-7e4a-45f4-bbeb-01e8a497e0fa"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -202,12 +278,21 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
             m_SceneInteract_PointerPosition = m_SceneInteract.FindAction("PointerPosition", throwIfNotFound: true);
             m_SceneInteract_LeftClick = m_SceneInteract.FindAction("LeftClick", throwIfNotFound: true);
             m_SceneInteract_RightClick = m_SceneInteract.FindAction("RightClick", throwIfNotFound: true);
-            m_SceneInteract_Cancel = m_SceneInteract.FindAction("Cancel", throwIfNotFound: true);
+            // UI
+            m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+            m_UI_ToggleBuildPanel = m_UI.FindAction("ToggleBuildPanel", throwIfNotFound: true);
+            m_UI_ToggleProductionPanel = m_UI.FindAction("ToggleProductionPanel", throwIfNotFound: true);
+            m_UI_ToggleInventoryPanel = m_UI.FindAction("ToggleInventoryPanel", throwIfNotFound: true);
+            // Global
+            m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
+            m_Global_Cancel = m_Global.FindAction("Cancel", throwIfNotFound: true);
         }
 
         ~@GameInput()
         {
             UnityEngine.Debug.Assert(!m_SceneInteract.enabled, "This will cause a leak and performance issues, GameInput.SceneInteract.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, GameInput.UI.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Global.enabled, "This will cause a leak and performance issues, GameInput.Global.Disable() has not been called.");
         }
 
         /// <summary>
@@ -286,7 +371,6 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
         private readonly InputAction m_SceneInteract_PointerPosition;
         private readonly InputAction m_SceneInteract_LeftClick;
         private readonly InputAction m_SceneInteract_RightClick;
-        private readonly InputAction m_SceneInteract_Cancel;
         /// <summary>
         /// Provides access to input actions defined in input action map "SceneInteract".
         /// </summary>
@@ -310,10 +394,6 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
             /// Provides access to the underlying input action "SceneInteract/RightClick".
             /// </summary>
             public InputAction @RightClick => m_Wrapper.m_SceneInteract_RightClick;
-            /// <summary>
-            /// Provides access to the underlying input action "SceneInteract/Cancel".
-            /// </summary>
-            public InputAction @Cancel => m_Wrapper.m_SceneInteract_Cancel;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -349,9 +429,6 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
                 @RightClick.started += instance.OnRightClick;
                 @RightClick.performed += instance.OnRightClick;
                 @RightClick.canceled += instance.OnRightClick;
-                @Cancel.started += instance.OnCancel;
-                @Cancel.performed += instance.OnCancel;
-                @Cancel.canceled += instance.OnCancel;
             }
 
             /// <summary>
@@ -372,9 +449,6 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
                 @RightClick.started -= instance.OnRightClick;
                 @RightClick.performed -= instance.OnRightClick;
                 @RightClick.canceled -= instance.OnRightClick;
-                @Cancel.started -= instance.OnCancel;
-                @Cancel.performed -= instance.OnCancel;
-                @Cancel.canceled -= instance.OnCancel;
             }
 
             /// <summary>
@@ -408,6 +482,220 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
         /// Provides a new <see cref="SceneInteractActions" /> instance referencing this action map.
         /// </summary>
         public SceneInteractActions @SceneInteract => new SceneInteractActions(this);
+
+        // UI
+        private readonly InputActionMap m_UI;
+        private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+        private readonly InputAction m_UI_ToggleBuildPanel;
+        private readonly InputAction m_UI_ToggleProductionPanel;
+        private readonly InputAction m_UI_ToggleInventoryPanel;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "UI".
+        /// </summary>
+        public struct UIActions
+        {
+            private @GameInput m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public UIActions(@GameInput wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "UI/ToggleBuildPanel".
+            /// </summary>
+            public InputAction @ToggleBuildPanel => m_Wrapper.m_UI_ToggleBuildPanel;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/ToggleProductionPanel".
+            /// </summary>
+            public InputAction @ToggleProductionPanel => m_Wrapper.m_UI_ToggleProductionPanel;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/ToggleInventoryPanel".
+            /// </summary>
+            public InputAction @ToggleInventoryPanel => m_Wrapper.m_UI_ToggleInventoryPanel;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_UI; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="UIActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="UIActions" />
+            public void AddCallbacks(IUIActions instance)
+            {
+                if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+                @ToggleBuildPanel.started += instance.OnToggleBuildPanel;
+                @ToggleBuildPanel.performed += instance.OnToggleBuildPanel;
+                @ToggleBuildPanel.canceled += instance.OnToggleBuildPanel;
+                @ToggleProductionPanel.started += instance.OnToggleProductionPanel;
+                @ToggleProductionPanel.performed += instance.OnToggleProductionPanel;
+                @ToggleProductionPanel.canceled += instance.OnToggleProductionPanel;
+                @ToggleInventoryPanel.started += instance.OnToggleInventoryPanel;
+                @ToggleInventoryPanel.performed += instance.OnToggleInventoryPanel;
+                @ToggleInventoryPanel.canceled += instance.OnToggleInventoryPanel;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="UIActions" />
+            private void UnregisterCallbacks(IUIActions instance)
+            {
+                @ToggleBuildPanel.started -= instance.OnToggleBuildPanel;
+                @ToggleBuildPanel.performed -= instance.OnToggleBuildPanel;
+                @ToggleBuildPanel.canceled -= instance.OnToggleBuildPanel;
+                @ToggleProductionPanel.started -= instance.OnToggleProductionPanel;
+                @ToggleProductionPanel.performed -= instance.OnToggleProductionPanel;
+                @ToggleProductionPanel.canceled -= instance.OnToggleProductionPanel;
+                @ToggleInventoryPanel.started -= instance.OnToggleInventoryPanel;
+                @ToggleInventoryPanel.performed -= instance.OnToggleInventoryPanel;
+                @ToggleInventoryPanel.canceled -= instance.OnToggleInventoryPanel;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UIActions.UnregisterCallbacks(IUIActions)" />.
+            /// </summary>
+            /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
+            public void RemoveCallbacks(IUIActions instance)
+            {
+                if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
+            /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
+            /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
+            public void SetCallbacks(IUIActions instance)
+            {
+                foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="UIActions" /> instance referencing this action map.
+        /// </summary>
+        public UIActions @UI => new UIActions(this);
+
+        // Global
+        private readonly InputActionMap m_Global;
+        private List<IGlobalActions> m_GlobalActionsCallbackInterfaces = new List<IGlobalActions>();
+        private readonly InputAction m_Global_Cancel;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "Global".
+        /// </summary>
+        public struct GlobalActions
+        {
+            private @GameInput m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public GlobalActions(@GameInput wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "Global/Cancel".
+            /// </summary>
+            public InputAction @Cancel => m_Wrapper.m_Global_Cancel;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_Global; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="GlobalActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(GlobalActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="GlobalActions" />
+            public void AddCallbacks(IGlobalActions instance)
+            {
+                if (instance == null || m_Wrapper.m_GlobalActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_GlobalActionsCallbackInterfaces.Add(instance);
+                @Cancel.started += instance.OnCancel;
+                @Cancel.performed += instance.OnCancel;
+                @Cancel.canceled += instance.OnCancel;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="GlobalActions" />
+            private void UnregisterCallbacks(IGlobalActions instance)
+            {
+                @Cancel.started -= instance.OnCancel;
+                @Cancel.performed -= instance.OnCancel;
+                @Cancel.canceled -= instance.OnCancel;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GlobalActions.UnregisterCallbacks(IGlobalActions)" />.
+            /// </summary>
+            /// <seealso cref="GlobalActions.UnregisterCallbacks(IGlobalActions)" />
+            public void RemoveCallbacks(IGlobalActions instance)
+            {
+                if (m_Wrapper.m_GlobalActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="GlobalActions.AddCallbacks(IGlobalActions)" />
+            /// <seealso cref="GlobalActions.RemoveCallbacks(IGlobalActions)" />
+            /// <seealso cref="GlobalActions.UnregisterCallbacks(IGlobalActions)" />
+            public void SetCallbacks(IGlobalActions instance)
+            {
+                foreach (var item in m_Wrapper.m_GlobalActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_GlobalActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="GlobalActions" /> instance referencing this action map.
+        /// </summary>
+        public GlobalActions @Global => new GlobalActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         /// <summary>
         /// Provides access to the input control scheme.
@@ -449,6 +737,43 @@ namespace GameDesign4.SceneInteract.Presentation.Input.Generated
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnRightClick(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
+        /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
+        public interface IUIActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "ToggleBuildPanel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnToggleBuildPanel(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "ToggleProductionPanel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnToggleProductionPanel(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "ToggleInventoryPanel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnToggleInventoryPanel(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Global" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="GlobalActions.AddCallbacks(IGlobalActions)" />
+        /// <seealso cref="GlobalActions.RemoveCallbacks(IGlobalActions)" />
+        public interface IGlobalActions
+        {
             /// <summary>
             /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>

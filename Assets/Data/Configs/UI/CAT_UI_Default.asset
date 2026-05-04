@@ -17,19 +17,23 @@ MonoBehaviour:
     addressKey: UI.Panel.Hud.Main
     layer: 0
     openOnStartup: 1
+    closeByCancel: 0
     exclusivePanelIds: []
   - panelId: BuildPanel
     addressKey: UI.Panel.Build.Main
     layer: 100
     openOnStartup: 0
+    closeByCancel: 1
     exclusivePanelIds: []
   - panelId: InventoryPanel
     addressKey: UI.Panel.Inventory.Main
     layer: 100
     openOnStartup: 0
+    closeByCancel: 1
     exclusivePanelIds: []
   - panelId: ProductionPanel
     addressKey: UI.Panel.Production.Main
     layer: 100
     openOnStartup: 0
+    closeByCancel: 1
     exclusivePanelIds: []

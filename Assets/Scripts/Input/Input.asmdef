@@ -1,14 +1,9 @@
 {
-    "name": "SceneInteract",
-    "rootNamespace": "GameDesign4.SceneInteract",
+    "name": "Input",
+    "rootNamespace": "GameDesign4.Input",
     "references": [
-        "Shared",
-        "Command.Contracts",
-        "Build.Contracts",
-        "Unit.Contracts",
-        "Common",
-        "Infrastructure.Contracts",
-        "Input"
+        "Unity.InputSystem",
+        "VContainer"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

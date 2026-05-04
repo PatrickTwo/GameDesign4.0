@@ -10,7 +10,8 @@
         "Unity.ResourceManager",
         "Unity.InputSystem",
         "Unity.TextMeshPro",
-        "Common"
+        "Common",
+        "Input"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

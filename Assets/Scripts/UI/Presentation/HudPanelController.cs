@@ -14,7 +14,7 @@ namespace GameDesign4.UI.Presentation
         [SerializeField] private Button inventoryButton;
         [SerializeField] private Button productionButton;
 
-        private Runtime.IUIService uiPanelService;
+        private Runtime.IUIController uiController;
 
         /// <summary>
         /// 当前面板唯一标识。
@@ -26,9 +26,9 @@ namespace GameDesign4.UI.Presentation
         /// 注入 HUD 所需的面板控制服务。
         /// </summary>
         [Inject]
-        public void Construct(Runtime.IUIService uiPanelService)
+        public void Construct(Runtime.IUIController uiController)
         {
-            this.uiPanelService = uiPanelService;
+            this.uiController = uiController;
             BindButtons();
         }
 
@@ -42,9 +42,9 @@ namespace GameDesign4.UI.Presentation
             productionButton.onClick.RemoveAllListeners();
 
             // 统一由 HUD 把用户点击翻译成面板切换请求。
-            buildButton.onClick.AddListener(() => uiPanelService.TogglePanel(Runtime.UIPanelId.Build));
-            inventoryButton.onClick.AddListener(() => uiPanelService.TogglePanel(Runtime.UIPanelId.Inventory));
-            productionButton.onClick.AddListener(() => uiPanelService.TogglePanel(Runtime.UIPanelId.Production));
+            buildButton.onClick.AddListener(() => uiController.TogglePanel(Runtime.UIPanelId.Build));
+            inventoryButton.onClick.AddListener(() => uiController.TogglePanel(Runtime.UIPanelId.Inventory));
+            productionButton.onClick.AddListener(() => uiController.TogglePanel(Runtime.UIPanelId.Production));
         }
         #endregion
     }

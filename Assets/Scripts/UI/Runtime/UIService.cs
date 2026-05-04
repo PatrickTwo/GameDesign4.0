@@ -14,31 +14,16 @@ namespace GameDesign4.UI.Runtime
 {
     /// <summary>
     /// 运行时 UI 服务。
-    /// 负责根据配置加载并缓存全部 BasePanel，并统一提供面板开关能力。
-    /// 对外可用接口：
-    /// 1. 初始化并缓存所有 BasePanel
-    /// 2. 提供统一的面板打开、关闭、切换接口
+    /// 负责根据配置加载并缓存全部 BasePanel，并提供基础的面板开关能力。
     /// </summary>
-    public sealed class UIService : IUIService, IStartable, IDisposable
+    public sealed class UIService : IDisposable
     {
         private readonly UIRoot uiRoot;
         private readonly IObjectResolver objectResolver;
 
         // 缓存全部面板，键为 PanelId。
-        private readonly Dictionary<string, BasePanel> openedPanels = new();
-        // 面板互斥关系，键为 PanelId，值为互斥的其他 PanelId 列表。
-        private readonly Dictionary<string, List<string>> panelExclusive = new();
+        private readonly Dictionary<string, BasePanel> loadedPanels = new Dictionary<string, BasePanel>();
 
-        /// <summary>
-        /// 面板打开顺序栈。
-        /// 用于支持按最近打开顺序关闭面板。
-        /// </summary>
-        private readonly List<string> openedPanelOrder = new();
-
-        public void Start()
-        {
-            GameLog.Log(GameLogModule.UI, "UI 服务启动");
-        }
         /// <summary>
         /// 构造运行时 UI 服务。
         /// </summary>
@@ -62,9 +47,7 @@ namespace GameDesign4.UI.Runtime
         /// </summary>
         private async UniTask InitializePanelsAsync(UiPanelCatalogDef uiPanelCatalog)
         {
-            openedPanels.Clear();
-            panelExclusive.Clear();
-            openedPanelOrder.Clear();
+            loadedPanels.Clear();
 
             IReadOnlyList<UiPanelEntryDef> panelEntries = uiPanelCatalog.PanelEntries;
             for (int index = 0; index < panelEntries.Count; index++)
@@ -89,9 +72,7 @@ namespace GameDesign4.UI.Runtime
 
                 Guard.Ensure(panelInstance.TryGetComponent(out BasePanel panel), $"UI UI预制体缺少 BasePanel：{panelEntry.PanelId}");
 
-                openedPanels.Add(panelEntry.PanelId, panel);
-
-                panelExclusive[panelEntry.PanelId] = new(panelEntry.ExclusivePanelIds);
+                loadedPanels.Add(panelEntry.PanelId, panel);
 
                 if (panelEntry.OpenOnStartup)
                 {
@@ -103,7 +84,7 @@ namespace GameDesign4.UI.Runtime
                 }
             }
 
-            GameLog.Log(GameLogModule.UI, $"UI 面板缓存完成，数量：{openedPanels.Count}");
+            GameLog.Log(GameLogModule.UI, $"UI 面板缓存完成，数量：{loadedPanels.Count}");
         }
         #endregion
 
@@ -119,11 +100,11 @@ namespace GameDesign4.UI.Runtime
                 return false;
             }
 
-            return openedPanels.TryGetValue(panelId, out panel);
+            return loadedPanels.TryGetValue(panelId, out panel);
         }
         #endregion
 
-        #region IUiPanelService 实现方法
+        #region 基础面板控制
         /// <summary>
         /// 判断指定面板当前是否处于打开状态。
         /// </summary>
@@ -147,17 +128,7 @@ namespace GameDesign4.UI.Runtime
                 return;
             }
 
-            if (panelExclusive.TryGetValue(panelId, out List<string> exclusivePanelIds))
-            {
-                for (int index = 0; index < exclusivePanelIds.Count; index++)
-                {
-                    ClosePanel(exclusivePanelIds[index]);
-                }
-            }
-
             panel.Open();
-            openedPanelOrder.Remove(panelId);
-            openedPanelOrder.Add(panelId);
             // 同层中后打开的面板显示在最前。
             panel.transform.SetAsLastSibling();
         }
@@ -173,40 +144,6 @@ namespace GameDesign4.UI.Runtime
             }
 
             panel.Close();
-            openedPanelOrder.Remove(panelId);
-        }
-
-        /// <summary>
-        /// 关闭最近打开的面板。
-        /// </summary>
-        public void CloseLastOpenedPanel()
-        {
-            for (int index = openedPanelOrder.Count - 1; index >= 0; index--)
-            {
-                string panelId = openedPanelOrder[index];
-                if (IsPanelOpen(panelId) == false)
-                {
-                    openedPanelOrder.RemoveAt(index);
-                    continue;
-                }
-
-                ClosePanel(panelId);
-                return;
-            }
-        }
-
-        /// <summary>
-        /// 切换指定面板的打开状态。
-        /// </summary>
-        public void TogglePanel(string panelId)
-        {
-            if (IsPanelOpen(panelId))
-            {
-                ClosePanel(panelId);
-                return;
-            }
-
-            OpenPanel(panelId);
         }
         #endregion
 
@@ -216,7 +153,7 @@ namespace GameDesign4.UI.Runtime
         /// </summary>
         public void Dispose()
         {
-            foreach (KeyValuePair<string, BasePanel> panelPair in openedPanels)
+            foreach (KeyValuePair<string, BasePanel> panelPair in loadedPanels)
             {
                 if (panelPair.Value != null)
                 {
@@ -224,9 +161,7 @@ namespace GameDesign4.UI.Runtime
                 }
             }
 
-            openedPanels.Clear();
-            panelExclusive.Clear();
-            openedPanelOrder.Clear();
+            loadedPanels.Clear();
         }
         #endregion
     }

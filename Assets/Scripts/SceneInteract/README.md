@@ -7,8 +7,6 @@ SceneInteract
 ├─ SceneInteract.asmdef
 ├─ README.md
 ├─ Presentation
-│  ├─ Input
-│  │  └─ Generated/GameInput.cs
 │  └─ Selection
 │     └─ SceneSelectable.cs
 └─ Runtime
@@ -21,16 +19,15 @@ SceneInteract
 
 | 文件 | 职责 |
 |---|---|
-| `Presentation/Input/Generated/GameInput.cs` | Input System 自动生成的场景交互输入定义。 |
 | `Presentation/Selection/SceneSelectable.cs` | 挂在可选中场景对象上的薄组件，负责暴露单位标识并桥接选中表现。 |
 | `Runtime/SceneSelectionService.cs` | 维护当前单选目标并切换选中状态。 |
 | `Runtime/SceneCommandService.cs` | 将左键、右键、取消输入翻译为选择、移动和攻击命令。 |
-| `Runtime/SceneInteractController.cs` | 由 DI 容器创建并驱动的纯运行时控制器，负责串起输入、共享指针上下文与场景命令链路。 |
+| `Runtime/SceneInteractController.cs` | 作为输入消费者接收 `Input` 模块转发的场景交互语义，再串起共享指针上下文与场景命令链路。 |
 
 ## 当前交互链路
 
 ```text
-GameInput
+InputController
 -> SceneInteractController
 -> PointerContextService
 -> SceneCommandService

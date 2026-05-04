@@ -27,6 +27,7 @@ namespace GameDesign4.UI.Definitions
         [SerializeField] private string addressKey = string.Empty;
         [SerializeField] private UiLayerType layer = UiLayerType.Normal;
         [SerializeField] private bool openOnStartup;
+        [SerializeField] private bool closeByCancel = true;
         [SerializeField] private List<string> exclusivePanelIds = new List<string>();
 
         /// <summary>
@@ -48,6 +49,11 @@ namespace GameDesign4.UI.Definitions
         /// 是否在启动时默认打开。
         /// </summary>
         public bool OpenOnStartup => openOnStartup;
+
+        /// <summary>
+        /// 是否允许被取消输入按最近打开顺序关闭。
+        /// </summary>
+        public bool CloseByCancel => closeByCancel;
 
         /// <summary>
         /// 打开当前面板时需要关闭的互斥面板列表。
